@@ -33,7 +33,7 @@ public final class RemoteFeedLoader {
 	public func load(completion: @escaping (Error) -> Void) {
 		client.get(from: url) { result in
 			switch result {
-			case .success(let data, let response):
+			case .success(_, let response):
 				if response.statusCode == 200 {
 					completion(.invalidData)
 				} else {
