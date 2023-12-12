@@ -21,7 +21,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		sut.load() { _ in }
 		
-		XCTAssertEqual(client.requestedURLs, [url], "Given url \(url) does not match the requestedURL \(client.requestedURLs)")
+		XCTAssertEqual(client.requestedURLs, [url], "Given url \(url) does not match the requestedURL \(client.messages[0].url)")
 	}
 	
 	func test_loadTwice_requestsDataFromURLTwice() {
@@ -31,7 +31,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
 		sut.load() { _ in }
 		sut.load() { _ in }
 		
-		XCTAssertEqual(client.requestedURLs, [url, url], "Expected 2 but got \(client.requestedURLs.count)")
+		XCTAssertEqual(client.requestedURLs, [url, url], "Expected 2 but got \(client.messages.count)")
 	}
 	
 	func test_load_deliversErrorOnClientError() {
@@ -55,16 +55,18 @@ final class RemoteFeedLoaderTests: XCTestCase {
 	}
 	
 	private class HTTPClientSpy: HTTPClient {
-		var requestedURLs: [URL] = []
-		var completions: [((Error) -> Void)] = []
+		var messages: [(url: URL, completion: ((Error) -> Void))] = []
+		
+		var requestedURLs: [URL] {
+			return messages.compactMap { $0.url }
+		}
 		
 		func get(from url: URL, completion: @escaping (Error) -> Void) {
-			completions.append(completion)
-			requestedURLs.append(url)
+			messages.append((url: url, completion: completion))
 		}
 		
 		func complete(with error: Error, at index: Int = 0) {
-			completions[index](error)
+			messages[index].completion(error)
 		}
 	}
 }
