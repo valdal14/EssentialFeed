@@ -37,7 +37,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
 	func test_load_deliversErrorOnClientError() {
 		let (sut, client) = makeSUT()
 		
-		expect(sut: sut, toCompleteWithError: .connectivity) {
+		expect(sut: sut, toCompleteWith: .failure(.connectivity)) {
 			let clientError = NSError(domain: "Test", code: 0)
 			client.complete(with: clientError)
 		}
@@ -49,7 +49,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
 		let httpStatusCodes = [199, 201, 300, 400, 500]
 		
 		httpStatusCodes.enumerated().forEach { (index, code) in
-			expect(sut: sut, toCompleteWithError: .invalidData) {
+			expect(sut: sut, toCompleteWith: .failure(.invalidData)) {
 				client.complete(withStatusCode: code, at: index)
 			}
 		}
@@ -58,9 +58,23 @@ final class RemoteFeedLoaderTests: XCTestCase {
 	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
 		let (sut, client) = makeSUT()
 		
-		expect(sut: sut, toCompleteWithError: .invalidData) {
+		expect(sut: sut, toCompleteWith: .failure(.invalidData)) {
 			let invalidJSON = "invalid json".data(using: .utf8)!
 			client.complete(withStatusCode: 200, data: invalidJSON)
+		}
+	}
+	
+	func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
+		let (sut, client) = makeSUT()
+		
+		expect(sut: sut, toCompleteWith: .success([])) {
+			let emptyListJSON = """
+				{
+					"items": []
+				}
+			""".data(using: .utf8)!
+			
+			client.complete(withStatusCode: 200, data: emptyListJSON)
 		}
 	}
 	
@@ -71,13 +85,13 @@ final class RemoteFeedLoaderTests: XCTestCase {
 		return (RemoteFeedLoader(url: url, client: client), client)
 	}
 	
-	private func expect(sut: RemoteFeedLoader, toCompleteWithError error: RemoteFeedLoader.Error, file: StaticString = #file, line: UInt = #line, when action: ()-> Void) {
+	private func expect(sut: RemoteFeedLoader, toCompleteWith result: RemoteFeedLoader.Result, file: StaticString = #file, line: UInt = #line, when action: ()-> Void) {
 		var capturedResults = [RemoteFeedLoader.Result]()
-		sut.load { _ in capturedResults.append(.failure(error)) }
+		sut.load { _ in capturedResults.append(result) }
 		
 		action()
 		
-		XCTAssertEqual(capturedResults, [.failure(error)], file: file, line: line)
+		XCTAssertEqual(capturedResults, [result], file: file, line: line)
 	}
 	
 	// MARK: - HTTPClientSpy
