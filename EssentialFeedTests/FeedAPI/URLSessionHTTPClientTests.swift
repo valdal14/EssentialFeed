@@ -105,13 +105,24 @@ final class URLSessionHTTPClientTests: XCTestCase {
 	}
 	
 	private func resultValuesFor(data: Data?, response: URLResponse?, error: Error?, file: StaticString = #file, line: UInt = #line) -> (data: Data, response: HTTPURLResponse)? {
-		let result = resultFor(data: data, response: response, error: error)
+		let result = resultFor(data: data, response: response, error: error, file: file, line: line)
 		
 		switch result {
 		case .success(let data, let response):
 			return (data, response)
 		default:
 			XCTFail("Expected success, got \(result) instead", file: file, line: line)
+			return nil
+		}
+	}
+	
+	private func resultErrorFor(data: Data?, response: URLResponse?, error: Error?, file: StaticString = #file, line: UInt = #line) -> Error? {
+		let result = resultFor(data: data, response: response, error: error, file: file, line: line)
+		switch result {
+		case .failure(let error):
+			return error
+		default:
+			XCTFail("Expected failure, got \(result) instead", file: file, line: line)
 			return nil
 		}
 	}
@@ -131,28 +142,6 @@ final class URLSessionHTTPClientTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 		return receivedResult
 		
-	}
-	
-	private func resultErrorFor(data: Data?, response: URLResponse?, error: Error?, file: StaticString = #file, line: UInt = #line) -> Error? {
-		URLProtocolStub.stub(data: data, response: response, error: error)
-		let sut = makeSUT(file: file, line: line)
-		let exp = expectation(description: "Wait for the completion")
-		
-		var receivedError: Error?
-		
-		sut.get(from: anyURL()) { result in
-			switch result {
-			case .failure(let error):
-				receivedError = error
-			default:
-				XCTFail("Expected invalid but for \(result)", file: file, line: line)
-			}
-			
-			exp.fulfill()
-		}
-		
-		wait(for: [exp], timeout: 1.0)
-		return receivedError
 	}
 	
 	private func anyURL() -> URL {
