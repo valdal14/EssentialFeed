@@ -89,9 +89,17 @@
 		0120F14F2B2874D80038384E /* EssentialFeedTests */ = {
 			isa = PBXGroup;
 			children = (
-				0120F1502B2874D80038384E /* RemoteFeedLoaderTests.swift */,
+				0128A6422B29A2C9006159BD /* FeedAPI */,
 			);
 			path = EssentialFeedTests;
+			sourceTree = "<group>";
+		};
+		0128A6422B29A2C9006159BD /* FeedAPI */ = {
+			isa = PBXGroup;
+			children = (
+				0120F1502B2874D80038384E /* RemoteFeedLoaderTests.swift */,
+			);
+			path = FeedAPI;
 			sourceTree = "<group>";
 		};
 		013559CF2B287F4D00CF27EA /* FeedFeature */ = {
