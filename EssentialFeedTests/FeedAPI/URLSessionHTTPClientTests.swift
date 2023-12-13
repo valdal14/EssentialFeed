@@ -25,7 +25,6 @@ class URLSessionHTTPClient {
 }
 
 final class URLSessionHTTPClientTests: XCTestCase {
-
 	
 	override func setUp() {
 		super.setUp()
@@ -42,7 +41,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
 		
 		let expectedError = NSError(domain: "any error", code: 400)
 		
-		URLProtocolStub.stub(url: url, error: expectedError)
+		URLProtocolStub.stub(url: url, data: nil, response: nil, error: expectedError)
 		
 		let exp = expectation(description: "Wait for the completion")
 		
@@ -61,6 +60,8 @@ final class URLSessionHTTPClientTests: XCTestCase {
 		
 		wait(for: [exp], timeout: 1.0)
 	}
+	
+	
 }
 
 // MARK: - URLProtocolSpy
@@ -68,11 +69,13 @@ private class URLProtocolStub: URLProtocol {
 	private static var stubs: [URL : Stub] = [:]
 	
 	private struct Stub {
+		let data: Data?
+		let response: URLResponse?
 		let error: Error?
 	}
 	
-	static func stub(url: URL, error: Error) {
-		stubs[url] = Stub(error: error)
+	static func stub(url: URL, data: Data?, response: URLResponse?, error: Error?) {
+		stubs[url] = Stub(data: data, response: response, error: error)
 	}
 	
 	override class func canInit(with request: URLRequest) -> Bool {
@@ -85,6 +88,14 @@ private class URLProtocolStub: URLProtocol {
 	
 	override func startLoading() {
 		guard let url = request.url, let stub = URLProtocolStub.stubs[url] else { return }
+		
+		if let data = stub.data {
+			client?.urlProtocol(self, didLoad: data)
+		}
+		
+		if let response = stub.response {
+			client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+		}
 		
 		if let error = stub.error {
 			client?.urlProtocol(self, didFailWithError: error)
