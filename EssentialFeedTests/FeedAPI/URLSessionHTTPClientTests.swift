@@ -46,7 +46,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
 			exp.fulfill()
 		}
 		
-		URLSessionHTTPClient().get(from: url) { _ in }
+		makeSUT().get(from: url) { _ in }
 		
 		wait(for: [exp], timeout: 1.0)
 	}
@@ -60,8 +60,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
 		
 		let exp = expectation(description: "Wait for the completion")
 		
-		let sut = URLSessionHTTPClient()
-		sut.get(from: url) { result in
+		makeSUT().get(from: url) { result in
 			switch result {
 			case .success:
 				XCTFail("Expected failure but got \(result)")
@@ -74,6 +73,11 @@ final class URLSessionHTTPClientTests: XCTestCase {
 		}
 		
 		wait(for: [exp], timeout: 1.0)
+	}
+	
+	// MARK: - Halpers
+	private func makeSUT() -> URLSessionHTTPClient {
+		return .init()
 	}
 	
 }
