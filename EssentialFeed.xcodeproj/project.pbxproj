@@ -14,6 +14,7 @@
 		013559CE2B287E3E00CF27EA /* FeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013559CD2B287E3E00CF27EA /* FeedLoader.swift */; };
 		014786C72B2892BD00983C01 /* RemoteFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014786C62B2892BD00983C01 /* RemoteFeedLoader.swift */; };
 		01A456D82B29977A00933DC3 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A456D72B29977A00933DC3 /* HTTPClient.swift */; };
+		01A456DA2B2997F100933DC3 /* FeedItemsMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A456D92B2997F100933DC3 /* FeedItemsMapper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +36,7 @@
 		013559CD2B287E3E00CF27EA /* FeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoader.swift; sourceTree = "<group>"; };
 		014786C62B2892BD00983C01 /* RemoteFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedLoader.swift; sourceTree = "<group>"; };
 		01A456D72B29977A00933DC3 /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
+		01A456D92B2997F100933DC3 /* FeedItemsMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemsMapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 			children = (
 				014786C62B2892BD00983C01 /* RemoteFeedLoader.swift */,
 				01A456D72B29977A00933DC3 /* HTTPClient.swift */,
+				01A456D92B2997F100933DC3 /* FeedItemsMapper.swift */,
 			);
 			path = FeedAPI;
 			sourceTree = "<group>";
@@ -220,6 +223,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01A456DA2B2997F100933DC3 /* FeedItemsMapper.swift in Sources */,
 				013559CE2B287E3E00CF27EA /* FeedLoader.swift in Sources */,
 				014786C72B2892BD00983C01 /* RemoteFeedLoader.swift in Sources */,
 				01A456D82B29977A00933DC3 /* HTTPClient.swift in Sources */,
