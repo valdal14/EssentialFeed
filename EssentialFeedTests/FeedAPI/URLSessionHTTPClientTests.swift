@@ -76,10 +76,17 @@ final class URLSessionHTTPClientTests: XCTestCase {
 	}
 	
 	// MARK: - Halpers
-	private func makeSUT() -> URLSessionHTTPClient {
-		return .init()
+	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> URLSessionHTTPClient {
+		let sut = URLSessionHTTPClient()
+		trackForMemoryLeak(sut, file: file, line: line)
+		return sut
 	}
 	
+	private func trackForMemoryLeak(_ instance: AnyObject, file: StaticString = #file, line: UInt = #line) {
+		addTeardownBlock { [weak instance] in
+			XCTAssertNil(instance, "Instance of should have been decallocated to avoid potential memory leak", file: file, line: line)
+		}
+	}
 }
 
 // MARK: - URLProtocolSpy
