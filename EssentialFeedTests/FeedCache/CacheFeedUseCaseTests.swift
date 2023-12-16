@@ -9,24 +9,6 @@ import EssentialFeed
 import XCTest
 
 
-/**
- Helper class rapresenting the framework side and help defines
- the abstract interface the Use Case needs for its collaborator.
- We do not need to leak framework details into the Use case
- */
-class FeedStore {
-	var deleteCacheFeedCallCount: Int = 0
-	var insertCountCall: Int = 0
-	
-	func deleteCachedFeed() {
-		deleteCacheFeedCallCount += 1
-	}
-	
-	func completeDeletion(with: Error, at index: Int = 0) {
-		
-	}
-}
-
 class LocalFeedLoader {
 	private let store: FeedStore
 	
@@ -35,9 +17,53 @@ class LocalFeedLoader {
 	}
 	
 	func save(_ items: [FeedItem]) {
-		self.store.deleteCachedFeed()
+		/**
+		 When we invoke the save(_ items:) method the store.deleteCachedFeed needs to tell us
+		 whether the deletion was successful or not and we can address this with a closure. We
+		 can either force this operation to be a synch operation or let the framework run the work
+		 async. Using the closure we will allow the framework to do it async and maybe on a background queue
+		 */
+		self.store.deleteCachedFeed { [unowned self] error in
+			if error == nil {
+				self.store.insert(items)
+			} else {
+				
+			}
+		}
 	}
 }
+
+/**
+ Helper class rapresenting the framework side and help defines
+ the abstract interface the Use Case needs for its collaborator.
+ We do not need to leak framework details into the Use case
+ */
+class FeedStore {
+	typealias DeletionCompletion = ((Error?) -> Void)
+	var deleteCacheFeedCallCount: Int = 0
+	var insertCountCall: Int = 0
+	
+	private var deletionCompletions: [((Error?) -> Void)] = []
+	
+	func deleteCachedFeed(completion: @escaping DeletionCompletion) {
+		deleteCacheFeedCallCount += 1
+		deletionCompletions.append(completion)
+	}
+	
+	func completeDeletion(with error: Error, at index: Int = 0) {
+		deletionCompletions[index](error)
+	}
+	
+	func completeDeletionSuccssfully(at index: Int = 0) {
+		deletionCompletions[index](nil)
+	}
+	
+	func insert(_ items: [FeedItem]) {
+		insertCountCall += 1
+	}
+}
+
+// MARK: - Test class
 
 final class CacheFeedUseCaseTests: XCTestCase {
 	
@@ -74,6 +100,16 @@ final class CacheFeedUseCaseTests: XCTestCase {
 		store.completeDeletion(with: deletionError)
 		
 		XCTAssertEqual(store.insertCountCall, 0)
+	}
+	
+	func test_save_requestsNewCacheInsertionOnSuccessfulDeletion() {
+		let items: [FeedItem] = [uniqueItem(), uniqueItem()]
+		let (sut, store) = makeSUT()
+		
+		sut.save(items)
+		store.completeDeletionSuccssfully()
+		
+		XCTAssertEqual(store.insertCountCall, 1)
 	}
 	
 	// MARK: - Helpers
