@@ -19,12 +19,6 @@ class LocalFeedLoader {
 	}
 	
 	func save(_ items: [FeedItem], completion: @escaping (Error?) -> Void) {
-		/**
-		 When we invoke the save(_ items:) method the store.deleteCachedFeed needs to tell us
-		 whether the deletion was successful or not and we can address this with a closure. We
-		 can either force this operation to be a synch operation or let the framework run the work
-		 async. Using the closure we will allow the framework to do it async and maybe on a background queue
-		 */
 		self.store.deleteCachedFeed { [unowned self] error in
 			if error == nil {
 				/// here we can pass just the completion since they have the same signature
@@ -36,49 +30,12 @@ class LocalFeedLoader {
 	}
 }
 
-/**
- Helper class rapresenting the framework side and help defines
- the abstract interface the Use Case needs for its collaborator.
- We do not need to leak framework details into the Use case
- */
-class FeedStore {
+protocol FeedStore {
 	typealias DeletionCompletion = ((Error?) -> Void)
 	typealias InsertionCompletion = ((Error?) -> Void)
-	enum ReceivedMessage: Equatable {
-		case deleteCacheFeed
-		case insert([FeedItem], Date)
-	}
 	
-	private(set) var receivedMessages: [ReceivedMessage] = []
-	
-	private var deletionCompletions: [DeletionCompletion] = []
-	private var insertionCompletions: [InsertionCompletion] = []
-	
-	func deleteCachedFeed(completion: @escaping DeletionCompletion) {
-		deletionCompletions.append(completion)
-		receivedMessages.append(.deleteCacheFeed)
-	}
-	
-	func completeDeletion(with error: Error, at index: Int = 0) {
-		deletionCompletions[index](error)
-	}
-	
-	func completeDeletionSuccssfully(at index: Int = 0) {
-		deletionCompletions[index](nil)
-	}
-	
-	func insert(_ items: [FeedItem], timestamp: Date, completion: @escaping InsertionCompletion) {
-		insertionCompletions.append(completion)
-		receivedMessages.append(.insert(items, timestamp))
-	}
-	
-	func completeInsertion(with error: Error, at index: Int = 0) {
-		insertionCompletions[index](error)
-	}
-	
-	func completeInsertionSuccessfully(at index: Int = 0) {
-		insertionCompletions[index](nil)
-	}
+	func deleteCachedFeed(completion: @escaping DeletionCompletion)
+	func insert(_ items: [FeedItem], timestamp: Date, completion: @escaping InsertionCompletion)
 }
 
 // MARK: - Test class
@@ -166,8 +123,8 @@ final class CacheFeedUseCaseTests: XCTestCase {
 	}
 	
 	// MARK: - Helpers
-	private func makeSUT(currentDate: @escaping () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStore) {
-		let store = FeedStore()
+	private func makeSUT(currentDate: @escaping () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStoreSpy) {
+		let store = FeedStoreSpy()
 		let sut = LocalFeedLoader(store: store, currentDate: currentDate)
 		trackForMemoryLeak(store, file: file, line: line)
 		trackForMemoryLeak(sut, file: file, line: line)
@@ -206,4 +163,49 @@ final class CacheFeedUseCaseTests: XCTestCase {
 	private func anyNSError() -> NSError {
 		return NSError(domain: "any error", code: 0)
 	}
+}
+
+// MARK: - FeedStoreSpy
+
+private extension CacheFeedUseCaseTests {
+	
+	class FeedStoreSpy: FeedStore {
+		
+		enum ReceivedMessage: Equatable {
+			case deleteCacheFeed
+			case insert([FeedItem], Date)
+		}
+		
+		private(set) var receivedMessages: [ReceivedMessage] = []
+		
+		private var deletionCompletions: [DeletionCompletion] = []
+		private var insertionCompletions: [InsertionCompletion] = []
+		
+		func deleteCachedFeed(completion: @escaping DeletionCompletion) {
+			deletionCompletions.append(completion)
+			receivedMessages.append(.deleteCacheFeed)
+		}
+		
+		func completeDeletion(with error: Error, at index: Int = 0) {
+			deletionCompletions[index](error)
+		}
+		
+		func completeDeletionSuccssfully(at index: Int = 0) {
+			deletionCompletions[index](nil)
+		}
+		
+		func insert(_ items: [FeedItem], timestamp: Date, completion: @escaping InsertionCompletion) {
+			insertionCompletions.append(completion)
+			receivedMessages.append(.insert(items, timestamp))
+		}
+		
+		func completeInsertion(with error: Error, at index: Int = 0) {
+			insertionCompletions[index](error)
+		}
+		
+		func completeInsertionSuccessfully(at index: Int = 0) {
+			insertionCompletions[index](nil)
+		}
+	}
+
 }
