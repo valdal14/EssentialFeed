@@ -1,5 +1,5 @@
 //
-//  FeedItemsMapper.swift
+//  RemoteFeedItemsMapper.swift
 //  EssentialFeed
 //
 //  Created by Valerio D'ALESSIO on 13/12/23.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-internal final class FeedItemsMapper {
+internal final class RemoteFeedItemsMapper {
 	private static var OK_200: Int = 200
 	
 	private struct Root: Decodable {

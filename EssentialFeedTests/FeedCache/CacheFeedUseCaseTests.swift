@@ -28,7 +28,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
 	func test_save_requestsCacheDeletion() {
 		let (sut, store) = makeSUT()
 		
-		sut.save(uniqueItems().models) { _ in }
+		sut.save(uniqueImageFeed().models) { _ in }
 		
 		XCTAssertEqual(store.receivedMessages, [.deleteCacheFeed])
 	}
@@ -38,7 +38,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
 		
 		let deletionError = anyNSError()
 		
-		sut.save(uniqueItems().models) { _ in }
+		sut.save(uniqueImageFeed().models) { _ in }
 		store.completeDeletion(with: deletionError)
 		
 		XCTAssertEqual(store.receivedMessages, [.deleteCacheFeed])
@@ -46,7 +46,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
 	
 	func test_save_requestsNewCacheInsertionWithTimeStampOnSuccessfulDeletion() {
 		let timestamp = Date()
-		let items = uniqueItems()
+		let feed = uniqueImageFeed()
 		
 		/**
 		 Instead of letting the Use Case produce the current date directly
@@ -56,10 +56,10 @@ final class CacheFeedUseCaseTests: XCTestCase {
 		 */
 		let (sut, store) = makeSUT { return timestamp }
 		
-		sut.save(items.models) { _ in }
+		sut.save(feed.models) { _ in }
 		store.completeDeletionSuccssfully()
 		
-		XCTAssertEqual(store.receivedMessages, [.deleteCacheFeed, .insert(items.local, timestamp)])
+		XCTAssertEqual(store.receivedMessages, [.deleteCacheFeed, .insert(feed.local, timestamp)])
 	}
 	
 	func test_save_failsOnDeletionWithError() {
@@ -100,7 +100,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
 		
 		var receivedResults = [LocalFeedLoader.SaveResult]()
 		
-		sut?.save(uniqueItems().models) { receivedResults.append($0) }
+		sut?.save(uniqueImageFeed().models) { receivedResults.append($0) }
 		
 		sut = nil
 		// complete with an error after sut has been deallocated
@@ -115,7 +115,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
 		
 		var receivedResults = [LocalFeedLoader.SaveResult]()
 		
-		sut?.save(uniqueItems().models) { receivedResults.append($0) }
+		sut?.save(uniqueImageFeed().models) { receivedResults.append($0) }
 		
 		store.completeDeletionSuccssfully()
 		sut = nil
@@ -138,7 +138,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
 		let exp = expectation(description: "Wait for save completion to be done")
 		var receivedError: Error?
 		
-		sut.save(uniqueItems().models) { error in
+		sut.save(uniqueImageFeed().models) { error in
 			receivedError = error
 			exp.fulfill()
 		}
@@ -150,22 +150,22 @@ final class CacheFeedUseCaseTests: XCTestCase {
 		XCTAssertEqual(receivedError as NSError?, expectedError)
 	}
 	
-	private func uniqueItem() -> FeedItem {
-		return FeedItem(
+	private func uniqueImage() -> FeedImage {
+		return FeedImage(
 			id: .init(),
 			description: nil,
 			location: nil,
-			imageURL: anyURL()
+			url: anyURL()
 		)
 	}
 	
-	private func uniqueItems() -> (models: [FeedItem], local: [LocalFeedItem]) {
-		let models = [uniqueItem(), uniqueItem()]
-		let localItems = models.map { LocalFeedItem(
+	private func uniqueImageFeed() -> (models: [FeedImage], local: [LocalFeedImage]) {
+		let models = [uniqueImage(), uniqueImage()]
+		let localItems = models.map { LocalFeedImage(
 			id: $0.id,
 			description: $0.description,
 			location: $0.location,
-			imageURL: $0.imageURL)
+			url: $0.imageURL)
 		}
 		
 		return (models, localItems)
@@ -188,7 +188,7 @@ private extension CacheFeedUseCaseTests {
 		
 		enum ReceivedMessage: Equatable {
 			case deleteCacheFeed
-			case insert([LocalFeedItem], Date)
+			case insert([LocalFeedImage], Date)
 		}
 		
 		private(set) var receivedMessages: [ReceivedMessage] = []
@@ -209,9 +209,9 @@ private extension CacheFeedUseCaseTests {
 			deletionCompletions[index](nil)
 		}
 		
-		func insert(_ items: [LocalFeedItem], timestamp: Date, completion: @escaping InsertionCompletion) {
+		func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
 			insertionCompletions.append(completion)
-			receivedMessages.append(.insert(items, timestamp))
+			receivedMessages.append(.insert(feed, timestamp))
 		}
 		
 		func completeInsertion(with error: Error, at index: Int = 0) {
