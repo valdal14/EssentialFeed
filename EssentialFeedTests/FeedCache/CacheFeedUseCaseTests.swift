@@ -26,21 +26,19 @@ final class CacheFeedUseCaseTests: XCTestCase {
 	}
 
 	func test_save_requestsCacheDeletion() {
-		let items = [uniqueItem(), uniqueItem()]
 		let (sut, store) = makeSUT()
 		
-		sut.save(items) { _ in }
+		sut.save(uniqueItems().models) { _ in }
 		
 		XCTAssertEqual(store.receivedMessages, [.deleteCacheFeed])
 	}
 	
 	func test_save_doesNotRequestCacheInsertionOnDeletionWithError() {
-		let items = [uniqueItem(), uniqueItem()]
 		let (sut, store) = makeSUT()
 		
 		let deletionError = anyNSError()
 		
-		sut.save(items) { _ in }
+		sut.save(uniqueItems().models) { _ in }
 		store.completeDeletion(with: deletionError)
 		
 		XCTAssertEqual(store.receivedMessages, [.deleteCacheFeed])
@@ -48,13 +46,8 @@ final class CacheFeedUseCaseTests: XCTestCase {
 	
 	func test_save_requestsNewCacheInsertionWithTimeStampOnSuccessfulDeletion() {
 		let timestamp = Date()
-		let items = [uniqueItem(), uniqueItem()]
-		let localItems = items.map { LocalFeedItem(
-			id: $0.id,
-			description: $0.description,
-			location: $0.location,
-			imageURL: $0.imageURL)
-		}
+		let items = uniqueItems()
+		
 		/**
 		 Instead of letting the Use Case produce the current date directly
 		 we can move this responsability to a collaborator (Protocol or Closure)
@@ -63,10 +56,10 @@ final class CacheFeedUseCaseTests: XCTestCase {
 		 */
 		let (sut, store) = makeSUT { return timestamp }
 		
-		sut.save(items) { _ in }
+		sut.save(items.models) { _ in }
 		store.completeDeletionSuccssfully()
 		
-		XCTAssertEqual(store.receivedMessages, [.deleteCacheFeed, .insert(localItems, timestamp)])
+		XCTAssertEqual(store.receivedMessages, [.deleteCacheFeed, .insert(items.local, timestamp)])
 	}
 	
 	func test_save_failsOnDeletionWithError() {
@@ -107,7 +100,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
 		
 		var receivedResults = [LocalFeedLoader.SaveResult]()
 		
-		sut?.save([uniqueItem()]) { receivedResults.append($0) }
+		sut?.save(uniqueItems().models) { receivedResults.append($0) }
 		
 		sut = nil
 		// complete with an error after sut has been deallocated
@@ -122,7 +115,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
 		
 		var receivedResults = [LocalFeedLoader.SaveResult]()
 		
-		sut?.save([uniqueItem()]) { receivedResults.append($0) }
+		sut?.save(uniqueItems().models) { receivedResults.append($0) }
 		
 		store.completeDeletionSuccssfully()
 		sut = nil
@@ -145,7 +138,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
 		let exp = expectation(description: "Wait for save completion to be done")
 		var receivedError: Error?
 		
-		sut.save([uniqueItem()]) { error in
+		sut.save(uniqueItems().models) { error in
 			receivedError = error
 			exp.fulfill()
 		}
@@ -164,6 +157,18 @@ final class CacheFeedUseCaseTests: XCTestCase {
 			location: nil,
 			imageURL: anyURL()
 		)
+	}
+	
+	private func uniqueItems() -> (models: [FeedItem], local: [LocalFeedItem]) {
+		let models = [uniqueItem(), uniqueItem()]
+		let localItems = models.map { LocalFeedItem(
+			id: $0.id,
+			description: $0.description,
+			location: $0.location,
+			imageURL: $0.imageURL)
+		}
+		
+		return (models, localItems)
 	}
 	
 	private func anyURL() -> URL {
