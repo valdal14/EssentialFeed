@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		012070432B2EF1F3001E738C /* LocalFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 012070422B2EF1F3001E738C /* LocalFeedLoader.swift */; };
 		0120F14C2B2874D80038384E /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0120F1432B2874D80038384E /* EssentialFeed.framework */; };
 		0120F1512B2874D80038384E /* LoadFeedFromRemoteUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0120F1502B2874D80038384E /* LoadFeedFromRemoteUseCaseTests.swift */; };
 		0120F1522B2874D80038384E /* EssentialFeed.h in Headers */ = {isa = PBXBuildFile; fileRef = 0120F1462B2874D80038384E /* EssentialFeed.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -42,6 +43,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		012070422B2EF1F3001E738C /* LocalFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeedLoader.swift; sourceTree = "<group>"; };
 		0120F1432B2874D80038384E /* EssentialFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0120F1462B2874D80038384E /* EssentialFeed.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EssentialFeed.h; sourceTree = "<group>"; };
 		0120F14B2B2874D80038384E /* EssentialFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,6 +90,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		012070412B2EF1CE001E738C /* FeedCache */ = {
+			isa = PBXGroup;
+			children = (
+				012070422B2EF1F3001E738C /* LocalFeedLoader.swift */,
+			);
+			path = FeedCache;
+			sourceTree = "<group>";
+		};
 		0120F1392B2874D80038384E = {
 			isa = PBXGroup;
 			children = (
@@ -111,6 +121,7 @@
 		0120F1452B2874D80038384E /* EssentialFeed */ = {
 			isa = PBXGroup;
 			children = (
+				012070412B2EF1CE001E738C /* FeedCache */,
 				014786C52B28929800983C01 /* FeedAPI */,
 				0120F1462B2874D80038384E /* EssentialFeed.h */,
 				013559CF2B287F4D00CF27EA /* FeedFeature */,
@@ -325,6 +336,7 @@
 				01A456DA2B2997F100933DC3 /* FeedItemsMapper.swift in Sources */,
 				013559CE2B287E3E00CF27EA /* FeedLoader.swift in Sources */,
 				014786C72B2892BD00983C01 /* RemoteFeedLoader.swift in Sources */,
+				012070432B2EF1F3001E738C /* LocalFeedLoader.swift in Sources */,
 				01A456D82B29977A00933DC3 /* HTTPClient.swift in Sources */,
 				013559CC2B287D8000CF27EA /* FeedItem.swift in Sources */,
 				0153D4062B2A06D100FB2506 /* URLSessionHTTPClient.swift in Sources */,
