@@ -26,7 +26,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
 	}
 
 	func test_save_requestsCacheDeletion() {
-		let items: [FeedItem] = [uniqueItem(), uniqueItem()]
+		let items = [uniqueItem(), uniqueItem()]
 		let (sut, store) = makeSUT()
 		
 		sut.save(items) { _ in }
@@ -35,7 +35,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
 	}
 	
 	func test_save_doesNotRequestCacheInsertionOnDeletionWithError() {
-		let items: [FeedItem] = [uniqueItem(), uniqueItem()]
+		let items = [uniqueItem(), uniqueItem()]
 		let (sut, store) = makeSUT()
 		
 		let deletionError = anyNSError()
@@ -48,7 +48,13 @@ final class CacheFeedUseCaseTests: XCTestCase {
 	
 	func test_save_requestsNewCacheInsertionWithTimeStampOnSuccessfulDeletion() {
 		let timestamp = Date()
-		let items: [FeedItem] = [uniqueItem(), uniqueItem()]
+		let items = [uniqueItem(), uniqueItem()]
+		let localItems = items.map { LocalFeedItem(
+			id: $0.id,
+			description: $0.description,
+			location: $0.location,
+			imageURL: $0.imageURL)
+		}
 		/**
 		 Instead of letting the Use Case produce the current date directly
 		 we can move this responsability to a collaborator (Protocol or Closure)
@@ -60,7 +66,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
 		sut.save(items) { _ in }
 		store.completeDeletionSuccssfully()
 		
-		XCTAssertEqual(store.receivedMessages, [.deleteCacheFeed, .insert(items, timestamp)])
+		XCTAssertEqual(store.receivedMessages, [.deleteCacheFeed, .insert(localItems, timestamp)])
 	}
 	
 	func test_save_failsOnDeletionWithError() {
@@ -177,7 +183,7 @@ private extension CacheFeedUseCaseTests {
 		
 		enum ReceivedMessage: Equatable {
 			case deleteCacheFeed
-			case insert([FeedItem], Date)
+			case insert([LocalFeedItem], Date)
 		}
 		
 		private(set) var receivedMessages: [ReceivedMessage] = []
@@ -198,7 +204,7 @@ private extension CacheFeedUseCaseTests {
 			deletionCompletions[index](nil)
 		}
 		
-		func insert(_ items: [FeedItem], timestamp: Date, completion: @escaping InsertionCompletion) {
+		func insert(_ items: [LocalFeedItem], timestamp: Date, completion: @escaping InsertionCompletion) {
 			insertionCompletions.append(completion)
 			receivedMessages.append(.insert(items, timestamp))
 		}
