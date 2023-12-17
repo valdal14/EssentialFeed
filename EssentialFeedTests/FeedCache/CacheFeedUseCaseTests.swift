@@ -23,7 +23,10 @@ class LocalFeedLoader {
 			guard let self = self else { return }
 			if error == nil {
 				/// here we can pass just the completion since they have the same signature
-				self.store.insert(items, timestamp: self.currentDate(), completion: completion)
+				self.store.insert(items, timestamp: self.currentDate()) { [weak self] error in
+					guard self != nil else { return }
+					completion(error)
+				}
 			} else {
 				completion(error)
 			}
@@ -138,6 +141,21 @@ final class CacheFeedUseCaseTests: XCTestCase {
 		sut = nil
 		// complete with an error after sut has been deallocated
 		store.completeDeletion(with: anyNSError())
+		
+		XCTAssertTrue(receivedResults.isEmpty)
+	}
+	
+	func test_save_doesNotDeliverInsertionErrorAfterSUTInstanceHasBeenDeallocated() {
+		let store = FeedStoreSpy()
+		var sut: LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
+		
+		var receivedResults = [Error?]()
+		
+		sut?.save([uniqueItem()]) { receivedResults.append($0) }
+		
+		store.completeDeletionSuccssfully()
+		sut = nil
+		store.completeInsertion(with: anyNSError())
 		
 		XCTAssertTrue(receivedResults.isEmpty)
 	}
