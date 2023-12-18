@@ -31,6 +31,7 @@
 		01A65F812B2A3E5100BADEA2 /* XCTTestCase+MemoryLeakTrackingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0121EAB22B29EE2D00FA6F2B /* XCTTestCase+MemoryLeakTrackingHelper.swift */; };
 		01AF47512B30876E00B36D51 /* FeedCacheTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF47502B30876E00B36D51 /* FeedCacheTestHelpers.swift */; };
 		01AF47542B3088FF00B36D51 /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF47532B3088FF00B36D51 /* SharedTestHelpers.swift */; };
+		01AF47572B30A31500B36D51 /* FeedCachePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF47562B30A31500B36D51 /* FeedCachePolicy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +77,7 @@
 		01A65F792B2A239500BADEA2 /* EssentialFeedAPIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentialFeedAPIEndToEndTests.swift; sourceTree = "<group>"; };
 		01AF47502B30876E00B36D51 /* FeedCacheTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCacheTestHelpers.swift; sourceTree = "<group>"; };
 		01AF47532B3088FF00B36D51 /* SharedTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTestHelpers.swift; sourceTree = "<group>"; };
+		01AF47562B30A31500B36D51 /* FeedCachePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCachePolicy.swift; sourceTree = "<group>"; };
 		01C46F4B2B2A43D2008DEA0C /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -112,6 +114,7 @@
 				012070422B2EF1F3001E738C /* LocalFeedLoader.swift */,
 				012070442B2EF2FE001E738C /* FeedStore.swift */,
 				012070482B2F3AB2001E738C /* LocalFeedImage.swift */,
+				01AF47562B30A31500B36D51 /* FeedCachePolicy.swift */,
 			);
 			path = FeedCache;
 			sourceTree = "<group>";
@@ -368,6 +371,7 @@
 				01A456DA2B2997F100933DC3 /* RemoteFeedItemsMapper.swift in Sources */,
 				013559CE2B287E3E00CF27EA /* FeedLoader.swift in Sources */,
 				012070472B2F3A67001E738C /* RemoteFeedItem.swift in Sources */,
+				01AF47572B30A31500B36D51 /* FeedCachePolicy.swift in Sources */,
 				014786C72B2892BD00983C01 /* RemoteFeedLoader.swift in Sources */,
 				012070492B2F3AB2001E738C /* LocalFeedImage.swift in Sources */,
 				012070452B2EF2FE001E738C /* FeedStore.swift in Sources */,
