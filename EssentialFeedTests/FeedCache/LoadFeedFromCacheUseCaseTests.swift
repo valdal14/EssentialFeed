@@ -29,46 +29,19 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
 	func test_load_failsOnRetrieveError() {
 		let(sut, store) = makeSUT()
 		
-		let exp = expectation(description: "Wait for load completion")
-		
 		let retrievalError = anyNSError()
 		
-		sut.load { result in
-			switch result {
-			case .failure(let error):
-				XCTAssertEqual(error as NSError, retrievalError)
-			default:
-				XCTFail("Expected error but for \(result) instead")
-			}
-			
-			exp.fulfill()
+		expect(sut, toCompleteWith: .failure(anyNSError())) {
+			store.completeRetrieval(with: retrievalError)
 		}
-		
-		store.completeRetrieval(with: retrievalError)
-		
-		wait(for: [exp], timeout: 1.0)
 	}
 	
 	func test_load_deliversNoImagesOnEmptyCache() {
 		let(sut, store) = makeSUT()
 
-		let exp = expectation(description: "Wait for load completion")
-
-		sut.load { result in
-			switch result {
-			case .success(let images):
-				XCTAssertEqual(images, [])
-			default:
-				XCTFail("Expected success but got an \(result) instead")
-			}
-			exp.fulfill()
+		expect(sut, toCompleteWith: .success([])) {
+			store.completeWithEmptyCache()
 		}
-
-		store.completeWithEmptyCache()
-
-		wait(for: [exp], timeout: 1.0)
-
-		
 	}
 	
 	// MARK: - Helpers
@@ -78,6 +51,27 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
 		trackForMemoryLeak(store, file: file, line: line)
 		trackForMemoryLeak(sut, file: file, line: line)
 		return (sut, store)
+	}
+	
+	private func expect(_ sut: LocalFeedLoader, toCompleteWith exptectedResult: LocalFeedLoader.LoadResult, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+		let exp = expectation(description: "Wait for load completion")
+		
+		sut.load { receivedResult in
+			switch (receivedResult, exptectedResult) {
+			case let (.success(receivedImages), .success(expectedImages)):
+				XCTAssertEqual(receivedImages, expectedImages, file: file, line: line)
+			case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
+				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+			default:
+				XCTFail("Expected result \(exptectedResult) but for \(receivedResult) instead", file: file, line: line)
+			}
+			
+			exp.fulfill()
+		}
+		
+		action()
+		
+		wait(for: [exp], timeout: 1.0)
 	}
 	
 	private func anyNSError() -> NSError {
