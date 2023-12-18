@@ -13,7 +13,7 @@ public final class LocalFeedLoader {
 	
 	private let store: FeedStore
 	private let currentDate: () -> Date
-	
+	private static let MAX_AGE_CACHE: Int = 7
 	
 	public init(store: FeedStore, currentDate: @escaping () -> Date) {
 		self.store = store
@@ -32,16 +32,22 @@ public final class LocalFeedLoader {
 	}
 	
 	public func load(completion: @escaping (LoadResult) -> Void) {
-		store.retrieve { result in
+		store.retrieve { [unowned self] result in
 			switch result {
-			case .empty:
-				completion(.success([]))
 			case .failure(let error):
 				completion(.failure(error))
-			case let .found(feed: feed, timestamp: timestamp):
+			case let .found(feed: feed, timestamp: timestamp) where self.validate(timestamp):
 				completion(.success(feed.toModels()))
+			case .found, .empty:
+				completion(.success([]))
 			}
 		}
+	}
+	
+	private func validate(_ timestamp: Date) -> Bool {
+		let calendar = Calendar(identifier: .gregorian)
+		guard let maxCacheAge = calendar.date(byAdding: .day, value: Self.MAX_AGE_CACHE, to: timestamp) else { return false }
+		return currentDate() < maxCacheAge
 	}
 	
 	private func cache(_ feed: [FeedImage], with completion: @escaping (SaveResult) -> Void) {
