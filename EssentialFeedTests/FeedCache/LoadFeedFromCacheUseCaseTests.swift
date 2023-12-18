@@ -80,21 +80,21 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
 		}
 	}
 	
-	func test_load_hasNoSideEffectCacheOnRetrievalError() {
+	func test_load_hasNoSideEffectsCacheOnRetrievalError() {
 		let(sut, store) = makeSUT()
 		sut.load() { _ in }
 		store.completeRetrieval(with: anyNSError())
 		XCTAssertEqual(store.receivedMessages, [.retrieve])
 	}
 	
-	func test_load_hasNoSideEffectOnEmptyCache() {
+	func test_load_hasNoSideEffectsOnEmptyCache() {
 		let(sut, store) = makeSUT()
 		sut.load() { _ in }
 		store.completeWithEmptyCache()
 		XCTAssertEqual(store.receivedMessages, [.retrieve])
 	}
 	
-	func test_load_hasNotSideEffectOnLessThanSevenDaysOldCache() {
+	func test_load_hasNotSideEffectsOnLessThanSevenDaysOldCache() {
 		let feed = uniqueImageFeed()
 		let fixedCurrentDate = Date()
 		let lessThanSevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: 1)
