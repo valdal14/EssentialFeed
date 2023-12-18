@@ -18,6 +18,16 @@ public final class LocalFeedLoader: FeedLoader {
 		self.currentDate = currentDate
 	}
 	
+	/**
+	 TO-DO
+	 
+	 The LocalFeedLoader should encapsulate application-specific logic only
+	 and communication with Models to peform business logic.
+	 
+	 Rules and Policies ( like this validation and the MAX_AGE_CACHE value)
+	 are better suited in a Domain Model that is application-agnostic so it
+	 can be reused across application
+	 */
 	private func validate(_ timestamp: Date) -> Bool {
 		guard let maxCacheAge = calendar.date(byAdding: .day, value: Self.MAX_AGE_CACHE, to: timestamp) else { return false }
 		return currentDate() < maxCacheAge
