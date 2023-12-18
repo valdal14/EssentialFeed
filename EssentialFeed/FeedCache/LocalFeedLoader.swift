@@ -8,9 +8,6 @@
 import Foundation
 
 public final class LocalFeedLoader: FeedLoader {
-	public typealias SaveResult = Error?
-	public typealias LoadResult = LoadFeedResult
-	
 	private let store: FeedStore
 	private let currentDate: () -> Date
 	private static let MAX_AGE_CACHE: Int = 7
@@ -29,6 +26,8 @@ public final class LocalFeedLoader: FeedLoader {
 
 // MARK: - LocalFeedLoader Save Extension
 extension LocalFeedLoader {
+	public typealias SaveResult = Error?
+	
 	public func save(_ feed: [FeedImage], completion: @escaping (SaveResult) -> Void) {
 		self.store.deleteCachedFeed { [weak self] error in
 			guard let self = self else { return }
@@ -50,6 +49,8 @@ extension LocalFeedLoader {
 
 // MARK: - LocalFeedLoader Load Extension
 extension LocalFeedLoader {
+	public typealias LoadResult = LoadFeedResult
+	
 	public func load(completion: @escaping (LoadResult) -> Void) {
 		store.retrieve { [weak self] result in
 			guard let self = self else { return }
