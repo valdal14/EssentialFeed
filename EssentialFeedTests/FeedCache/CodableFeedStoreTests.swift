@@ -47,7 +47,7 @@ class CodableFeedStore: FeedStore {
 		}
 	}
 	
-	func retrieve(completion: @escaping FeedStore.RetrievalCompletions) {
+	func retrieve(completion: @escaping RetrievalCompletions) {
 		guard let data = try? Data(contentsOf: storeURL) else { return completion(.empty) }
 		do {
 			let decodedData = try JSONDecoder().decode(Cache.self, from: data)
@@ -60,7 +60,7 @@ class CodableFeedStore: FeedStore {
 		
 	}
 	
-	func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.InsertionCompletion) {
+	func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
 		do {
 			let codableFeedImage = feed.map { CodableFeedImage($0) }
 			let encodedData = try JSONEncoder().encode(Cache(feed: codableFeedImage, timestamp: timestamp))
@@ -71,7 +71,7 @@ class CodableFeedStore: FeedStore {
 		}
 	}
 	
-	func deleteCachedFeed(completion: @escaping FeedStore.DeletionCompletion) {
+	func deleteCachedFeed(completion: @escaping DeletionCompletion) {
 		guard FileManager.default.fileExists(atPath: storeURL.path) else {
 			return completion(nil)
 		}
