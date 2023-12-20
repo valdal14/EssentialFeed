@@ -70,6 +70,19 @@ class CodableFeedStore {
 			completion(error)
 		}
 	}
+	
+	func deleteCachedFeed(completion: @escaping FeedStore.DeletionCompletion) {
+		guard FileManager.default.fileExists(atPath: storeURL.path) else {
+			return completion(nil)
+		}
+		
+		do {
+			try FileManager.default.removeItem(at: self.storeURL)
+			completion(nil)
+		} catch {
+			completion(error)
+		}
+	}
 }
 
 final class CodableFeedStoreTests: XCTestCase {
@@ -158,6 +171,33 @@ final class CodableFeedStoreTests: XCTestCase {
 		XCTAssertNotNil(insertionError, "Expected cache insertion to fail with an error")
 	}
 	
+	func test_delete_hasNoSideEffectsOnEmptyCache() {
+		let sut = makeSUT()
+		
+		let deletedErrror = deleteCache(from: sut)
+		
+		XCTAssertNil(deletedErrror, "Expected empty cache deletion to succeed")
+		expect(sut, toRetrieve: .empty)
+	}
+	
+	func test_delete_emptiesPreviousltInsertedCache() {
+		let sut = makeSUT()
+		insert((feed: uniqueImageFeed().local, timestamp: Date()), to: sut)
+		
+		let deletedErrror = deleteCache(from: sut)
+		
+		XCTAssertNil(deletedErrror, "Expected non-empty cache deletion to succeed")
+		expect(sut, toRetrieve: .empty)
+	}
+	
+	func test_delete_deliversErrorOnDeletionError() {
+		let noDeletePermissionURL = cachesDirectory()
+		let sut = makeSUT(storeURL: noDeletePermissionURL)
+		
+		let deletedErrror = deleteCache(from: sut)
+		
+		XCTAssertNotNil(deletedErrror, "Expected cache deletion to fail with an error")
+	}
 	
 	// MARK: - Helpers
 	private func makeSUT(storeURL: URL? = nil, file: StaticString = #file, line: UInt = #line) -> CodableFeedStore {
@@ -179,6 +219,19 @@ final class CodableFeedStoreTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 		
 		return insertionError
+	}
+	
+	func deleteCache(from sut: CodableFeedStore) -> Error? {
+		let exp = expectation(description: "Wait for delete cache completion to be done")
+		var deletionError: Error?
+		
+		sut.deleteCachedFeed { receivedError in
+			deletionError = receivedError
+			exp.fulfill()
+		}
+		
+		wait(for: [exp], timeout: 1.0)
+		return deletionError
 	}
 	
 	private func expect(_ sut: CodableFeedStore, toRetrieveTwice expectedResult: RetrieveCachedFeedResult, file: StaticString = #file, line: UInt = #line) {
@@ -220,6 +273,10 @@ final class CodableFeedStoreTests: XCTestCase {
 	}
 	
 	private func testSpecificStoreURL() -> URL {
-		return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("\(type(of: self)).store")
+		return cachesDirectory().appendingPathComponent("\(type(of: self)).store")
+	}
+	
+	private func cachesDirectory() -> URL {
+		return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
 	}
 }
