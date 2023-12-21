@@ -171,7 +171,7 @@ final class CodableFeedStoreTests: XCTestCase {
 		return insertionError
 	}
 	
-	func deleteCache(from sut: FeedStore) -> Error? {
+	private func deleteCache(from sut: FeedStore) -> Error? {
 		let exp = expectation(description: "Wait for delete cache completion to be done")
 		var deletionError: Error?
 		
