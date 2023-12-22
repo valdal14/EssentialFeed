@@ -5,7 +5,6 @@
 //  Created by Valerio D'ALESSIO on 21/12/23.
 //
 
-import Foundation
 import CoreData
 
 public final class CoreDataFeedStore: FeedStore {
