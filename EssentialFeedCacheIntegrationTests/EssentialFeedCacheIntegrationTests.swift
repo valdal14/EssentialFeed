@@ -31,7 +31,7 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
 		
 		let feed = uniqueImageFeed().models
 		
-		save(feed, with: sutToPerformLoad)
+		save(feed, with: sutToPerformSave)
 		expect(sutToPerformLoad, toLoad: feed)
 	}
 	
@@ -50,9 +50,8 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
 	
 	// MARK: - Helpers
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) throws -> LocalFeedLoader {
-		let storeBundle = Bundle(for: CoreDataFeedStore.self)
 		let storeURL = testSpecificStoreURL()
-		let store = try CoreDataFeedStore(storeURL: storeURL, bundle: storeBundle)
+		let store = try CoreDataFeedStore(storeURL: storeURL)
 		let sut = LocalFeedLoader(store: store, currentDate: Date.init)
 		trackForMemoryLeak(store, file: file, line: line)
 		trackForMemoryLeak(sut, file: file, line: line)

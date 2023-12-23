@@ -9,13 +9,31 @@ import CoreData
 
 public final class CoreDataFeedStore: FeedStore {
 	private static let COREDATA_MODEL = "FeedStore"
+	private static let model = NSManagedObjectModel.with(name: COREDATA_MODEL, in: Bundle(for: CoreDataFeedStore.self))
 	
 	private let container: NSPersistentContainer
 	private let context: NSManagedObjectContext
 	
-	public init(storeURL: URL, bundle: Bundle = .main) throws {
-		self.container = try NSPersistentContainer.load(modelName: Self.COREDATA_MODEL, url: storeURL, in: bundle)
-		context = container.newBackgroundContext()
+	private enum StoreError: Error {
+		case modelNotFound
+		case failedLoadingPersistentContainer(Error)
+	}
+	
+	public init(storeURL: URL) throws {
+		guard let model = CoreDataFeedStore.model else {
+			throw StoreError.modelNotFound
+		}
+		
+		do {
+			container = try NSPersistentContainer.load(
+				name: Self.COREDATA_MODEL,
+				model: model,
+				url: storeURL
+			)
+			context = container.newBackgroundContext()
+		} catch {
+			throw StoreError.failedLoadingPersistentContainer(error)
+		}
 	}
 	
 	public func retrieve(completion: @escaping RetrievalCompletions) {
