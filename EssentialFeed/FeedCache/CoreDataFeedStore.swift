@@ -9,7 +9,6 @@ import CoreData
 
 public final class CoreDataFeedStore: FeedStore {
 	private static let COREDATA_MODEL = "FeedStore"
-	private static let ENTITY_NAME = ManagedCache.entity().name!
 	
 	private let container: NSPersistentContainer
 	private let context: NSManagedObjectContext
@@ -39,7 +38,7 @@ public final class CoreDataFeedStore: FeedStore {
 	
 	public func deleteCachedFeed(completion: @escaping DeletionCompletion) {
 		do {
-			let cache = try getNewManagedCacheInstance(in: context)
+			let cache = try ManagedCache.getNewManagedCacheInstance(in: context)
 			context.delete(cache)
 			try context.save()
 			completion(nil)
@@ -63,7 +62,7 @@ private extension CoreDataFeedStore {
 	/// it returns a `RetrieveCachedFeedResult.empty` case.
 	///
 	private func retriveCacheResult() throws -> RetrieveCachedFeedResult {
-		if let cache = try find(in: context) {
+		if let cache = try ManagedCache.find(in: context) {
 			let feed = mapToCoreDataFeed(from: cache)
 			return .found(feed: feed.localFeed, timestamp: feed.timestamp)
 		} else {
@@ -149,40 +148,8 @@ private extension CoreDataFeedStore {
 			return managedFeedImage
 		}
 		
-		let cache = try getNewManagedCacheInstance(in: context)
+		let cache = try ManagedCache.getNewManagedCacheInstance(in: context)
 		cache.feed = NSOrderedSet(array: managedFeedImages)
 		cache.timestamp = timestamp
-	}
-	
-	/// Finds and retrieves a `ManagedCache` instance from the specified Core Data context.
-	///
-	/// - Parameters:
-	///   - context: The `NSManagedObjectContext` in which to perform the fetch operation.
-	/// - Returns: A `ManagedCache` instance if found; otherwise, `nil`.
-	/// - Throws: An error if the fetch operation encounters issues.
-	///
-	private func find(in context: NSManagedObjectContext) throws -> ManagedCache? {
-		let request = NSFetchRequest<ManagedCache>(entityName: Self.ENTITY_NAME)
-		request.returnsObjectsAsFaults = false
-		return try context.fetch(request).first
-	}
-	
-	/// Creates a new instance of `ManagedCache` in the specified Core Data context, ensuring uniqueness.
-	///
-	/// - Parameters:
-	///   - context: The `NSManagedObjectContext` in which to create the new `ManagedCache` instance.
-	/// - Returns: A new `ManagedCache` instance.
-	/// - Throws: An error if the fetch or deletion operation encounters issues.
-	///
-	/// This function attempts to find an existing `ManagedCache` in the provided Core Data context using the
-	/// `find` method. If an existing instance is found, it is deleted to ensure uniqueness. Subsequently,
-	/// a new `ManagedCache` instance is created and returned.
-	///
-	/// - Note: The uniqueness check is based on the assumption that `find` performs a fetch operation that
-	///   identifies an existing `ManagedCache` instance.
-	///
-	private func getNewManagedCacheInstance(in context: NSManagedObjectContext) throws -> ManagedCache {
-		try find(in: context).map(context.delete)
-		return ManagedCache(context: context)
 	}
 }
