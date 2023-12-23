@@ -25,7 +25,7 @@ internal extension ManagedCache {
 	/// - Throws: An error if the fetch operation encounters issues.
 	///
 	static func find(in context: NSManagedObjectContext) throws -> ManagedCache? {
-		let request = NSFetchRequest<ManagedCache>(entityName: entity().name!)
+		let request = NSFetchRequest<ManagedCache>(entityName: entity().name ?? "ManagedCache")
 		request.returnsObjectsAsFaults = false
 		return try context.fetch(request).first
 	}
