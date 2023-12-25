@@ -49,7 +49,10 @@ public final class CoreDataFeedStore: FeedStore {
 	public func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
 		performContextAction { this in
 			do {
-				try this.mapToManageCache(from: feed, timestamp: timestamp)
+				let managedFeedImages = try this.mapToManageCache(from: feed, timestamp: timestamp)
+				let cache = try ManagedCache.getNewManagedCacheInstance(in: this.context)
+				cache.feed = NSOrderedSet(array: managedFeedImages)
+				cache.timestamp = timestamp
 				try this.context.save()
 				completion(nil)
 			} catch {
@@ -152,9 +155,9 @@ private extension CoreDataFeedStore {
 	///   - feed: An array of `LocalFeedImage` objects to be mapped to managed entities.
 	///   - timestamp: The timestamp to associate with the created `ManagedCache`.
 	///
-	private func mapToManageCache(from feed: [LocalFeedImage], timestamp: Date) throws {
+	private func mapToManageCache(from feed: [LocalFeedImage], timestamp: Date) throws -> [ManagedFeedImage] {
 		
-		let managedFeedImages: [ManagedFeedImage] = feed.map { feedImage in
+		return feed.map { feedImage in
 			let managedFeedImage = ManagedFeedImage(context: context)
 			managedFeedImage.id = feedImage.id
 			managedFeedImage.imageDescription = feedImage.description
@@ -162,9 +165,5 @@ private extension CoreDataFeedStore {
 			managedFeedImage.url = feedImage.url
 			return managedFeedImage
 		}
-		
-		let cache = try ManagedCache.getNewManagedCacheInstance(in: context)
-		cache.feed = NSOrderedSet(array: managedFeedImages)
-		cache.timestamp = timestamp
 	}
 }
