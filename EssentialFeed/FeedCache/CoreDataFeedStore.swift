@@ -37,31 +37,46 @@ public final class CoreDataFeedStore: FeedStore {
 	}
 	
 	public func retrieve(completion: @escaping RetrievalCompletions) {
-		do {
-			completion(try retriveCacheResult())
-		} catch {
-			completion(.empty)
+		performContextAction { this in
+			do {
+				completion(try this.retriveCacheResult())
+			} catch {
+				completion(.empty)
+			}
 		}
 	}
 	
 	public func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
-		do {
-			try mapToManageCache(from: feed, timestamp: timestamp)
-			try context.save()
-			completion(nil)
-		} catch {
-			completion(error)
+		performContextAction { this in
+			do {
+				try this.mapToManageCache(from: feed, timestamp: timestamp)
+				try this.context.save()
+				completion(nil)
+			} catch {
+				this.context.rollback()
+				completion(error)
+			}
 		}
 	}
 	
 	public func deleteCachedFeed(completion: @escaping DeletionCompletion) {
-		do {
-			let cache = try ManagedCache.getNewManagedCacheInstance(in: context)
-			context.delete(cache)
-			try context.save()
-			completion(nil)
-		} catch {
-			completion(error)
+		performContextAction { this in
+			do {
+				try ManagedCache.find(in: this.context).map(this.context.delete).map(this.context.save)
+				completion(nil)
+			} catch {
+				this.context.rollback()
+				completion(error)
+			}
+		}
+	}
+	
+	// MARK: - Helpers
+	private func performContextAction(_ asyncBlock: @escaping (CoreDataFeedStore) -> Void) {
+		weak var weakSelf = self
+		context.perform {
+			guard let self = weakSelf else { return }
+			asyncBlock(self)
 		}
 	}
 }
