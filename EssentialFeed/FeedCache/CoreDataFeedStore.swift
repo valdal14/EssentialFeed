@@ -37,31 +37,49 @@ public final class CoreDataFeedStore: FeedStore {
 	}
 	
 	public func retrieve(completion: @escaping RetrievalCompletions) {
-		do {
-			completion(try retriveCacheResult())
-		} catch {
-			completion(.empty)
+		performContextAction { this in
+			do {
+				completion(try this.retriveCacheResult())
+			} catch {
+				completion(.empty)
+			}
 		}
 	}
 	
 	public func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
-		do {
-			try mapToManageCache(from: feed, timestamp: timestamp)
-			try context.save()
-			completion(nil)
-		} catch {
-			completion(error)
+		performContextAction { this in
+			do {
+				let managedFeedImages = try this.mapToManageCache(from: feed, timestamp: timestamp)
+				let cache = try ManagedCache.getNewManagedCacheInstance(in: this.context)
+				cache.feed = NSOrderedSet(array: managedFeedImages)
+				cache.timestamp = timestamp
+				try this.context.save()
+				completion(nil)
+			} catch {
+				this.context.rollback()
+				completion(error)
+			}
 		}
 	}
 	
 	public func deleteCachedFeed(completion: @escaping DeletionCompletion) {
-		do {
-			let cache = try ManagedCache.getNewManagedCacheInstance(in: context)
-			context.delete(cache)
-			try context.save()
-			completion(nil)
-		} catch {
-			completion(error)
+		performContextAction { this in
+			do {
+				try ManagedCache.find(in: this.context).map(this.context.delete).map(this.context.save)
+				completion(nil)
+			} catch {
+				this.context.rollback()
+				completion(error)
+			}
+		}
+	}
+	
+	// MARK: - Helpers
+	private func performContextAction(_ asyncBlock: @escaping (CoreDataFeedStore) -> Void) {
+		weak var weakSelf = self
+		context.perform {
+			guard let self = weakSelf else { return }
+			asyncBlock(self)
 		}
 	}
 }
@@ -81,8 +99,8 @@ private extension CoreDataFeedStore {
 	///
 	private func retriveCacheResult() throws -> RetrieveCachedFeedResult {
 		if let cache = try ManagedCache.find(in: context) {
-			let feed = mapToCoreDataFeed(from: cache)
-			return .found(feed: feed.localFeed, timestamp: feed.timestamp)
+			let feed = mapToManagedFeed(from: cache)
+			return .found(feed: feed, timestamp: cache.timestamp)
 		} else {
 			return .empty
 		}
@@ -93,34 +111,18 @@ private extension CoreDataFeedStore {
 private extension CoreDataFeedStore {
 	
 	private struct CoreDataCache {
-		let feed: [CoreDataFeed]
+		let feed: [ManagedFeedImage]
 		let timestamp: Date
 		
 		var localFeed: [LocalFeedImage] {
-			return feed.map { $0.localFeedImage }
-		}
-	}
-	
-	private struct CoreDataFeed: Equatable {
-		private let id: UUID
-		private let imageDescription: String?
-		private let location: String?
-		private let url: URL
-		
-		init(id: UUID, imageDescription: String?, location: String?, url: URL) {
-			self.id = id
-			self.imageDescription = imageDescription
-			self.location = location
-			self.url = url
-		}
-		
-		var localFeedImage: LocalFeedImage {
-			return LocalFeedImage(
-				id: id,
-				description: imageDescription,
-				location: location,
-				url: url
-			)
+			return feed.map { feed in
+				return LocalFeedImage(
+					id: feed.id,
+					description: feed.imageDescription,
+					location: feed.location,
+					url: feed.url
+				)
+			}
 		}
 	}
 }
@@ -128,25 +130,23 @@ private extension CoreDataFeedStore {
 // MARK: - CoreDataFeedStore extension for data mapping helpers
 private extension CoreDataFeedStore {
 	
-	/// Maps a `ManagedCache` instance to a `CoreDataCache` instance.
+	/// Maps a `ManagedCache` instance to an array of `LocalFeedImage` instances.
 	///
 	/// - Parameters:
 	///   - managedCache: The `ManagedCache` instance to be mapped.
-	/// - Returns: A `CoreDataCache` instance created from the provided `ManagedCache`.
+	/// - Returns: An array of `ManagedFeedImage` instances
 	///
-	private func mapToCoreDataFeed(from managedCache: ManagedCache) -> CoreDataCache {
-		let coreDataCachedFeed = managedCache.feed.compactMap { storedFeedImage in
+	private func mapToManagedFeed(from managedCache: ManagedCache) -> [LocalFeedImage] {
+		let localFeedImages = managedCache.feed.compactMap { storedFeedImage in
 			storedFeedImage as? ManagedFeedImage
-		}.compactMap { managedFeedImage in
-			CoreDataFeed(
-				id: managedFeedImage.id,
-				imageDescription: managedFeedImage.imageDescription,
-				location: managedFeedImage.location,
-				url: managedFeedImage.url
-			)
+		}.compactMap { return LocalFeedImage(
+			id: $0.id,
+			description: $0.imageDescription,
+			location: $0.location,
+			url: $0.url)
 		}
 		
-		return CoreDataCache(feed: coreDataCachedFeed, timestamp: managedCache.timestamp)
+		return localFeedImages
 	}
 	
 	/// Maps an array of `LocalFeedImage` objects to a `ManagedCache` instance.
@@ -155,9 +155,9 @@ private extension CoreDataFeedStore {
 	///   - feed: An array of `LocalFeedImage` objects to be mapped to managed entities.
 	///   - timestamp: The timestamp to associate with the created `ManagedCache`.
 	///
-	private func mapToManageCache(from feed: [LocalFeedImage], timestamp: Date) throws {
+	private func mapToManageCache(from feed: [LocalFeedImage], timestamp: Date) throws -> [ManagedFeedImage] {
 		
-		let managedFeedImages: [ManagedFeedImage] = feed.map { feedImage in
+		return feed.map { feedImage in
 			let managedFeedImage = ManagedFeedImage(context: context)
 			managedFeedImage.id = feedImage.id
 			managedFeedImage.imageDescription = feedImage.description
@@ -165,9 +165,5 @@ private extension CoreDataFeedStore {
 			managedFeedImage.url = feedImage.url
 			return managedFeedImage
 		}
-		
-		let cache = try ManagedCache.getNewManagedCacheInstance(in: context)
-		cache.feed = NSOrderedSet(array: managedFeedImages)
-		cache.timestamp = timestamp
 	}
 }
