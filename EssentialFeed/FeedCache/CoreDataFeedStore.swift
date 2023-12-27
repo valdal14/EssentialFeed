@@ -41,7 +41,7 @@ public final class CoreDataFeedStore: FeedStore {
 			do {
 				completion(try Self.retriveCacheResult(in: context))
 			} catch {
-				completion(.success(.empty))
+				completion(.success(.none))
 			}
 		}
 	}
@@ -88,7 +88,7 @@ private extension CoreDataFeedStore {
 	///
 	/// - Parameters:
 	///   - context: The `NSManagedObjectContext` in which the cache is retrieved.
-	/// - Returns: A `RetrieveCachedFeedResult` indicating the outcome of the retrieval.
+	/// - Returns: A `FeedStore.RetrieveResult` indicating the outcome of the retrieval.
 	///   - If a cached feed is found, returns `.found(feed:timestamp:)` with the mapped feed and timestamp.
 	///   - If no cached feed is found, returns `.empty`.
 	/// - Throws: An error of type `Error` if there is an issue during the retrieval process.
@@ -96,9 +96,9 @@ private extension CoreDataFeedStore {
 	static func retriveCacheResult(in context: NSManagedObjectContext) throws -> FeedStore.RetrieveResult {
 		if let cache = try ManagedCache.find(in: context) {
 			let feed = Self.mapToManagedFeed(from: cache)
-			return .success(.found(feed: feed, timestamp: cache.timestamp))
+			return .success(CacheFeed(feed: feed, timestamp: cache.timestamp))
 		} else {
-			return .success(.empty)
+			return .success(.none)
 		}
 	}
 }
