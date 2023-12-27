@@ -37,40 +37,43 @@ public final class CoreDataFeedStore: FeedStore {
 	}
 	
 	public func retrieve(completion: @escaping RetrievalCompletions) {
+		/**
+		 Now that the RetrievalCompletions completion is Swift.Result<CacheFeed?, Error>
+		 is a standard Result type, by just having one completion using the Result type
+		 catching initialiser that if an error is thorwn it will automatically wraps it
+		 into a failure of the result type and therefore we do not need to use the
+		 completion block since it will return a wrapped value of the success case if successfull.
+		 
+		 We can also eliminate the if else statement by mapping the optional return value
+		 of the find method
+		 */
 		perform { context in
-			do {
-				completion(try Self.retriveCacheResult(in: context))
-			} catch {
-				completion(.success(.none))
-			}
+			completion(Result {
+				try ManagedCache.find(in: context).map { cache in
+					let feed = Self.mapToManagedFeed(from: cache)
+					return CacheFeed(feed: feed, timestamp: cache.timestamp)
+				}
+			})
 		}
 	}
 	
 	public func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
 		perform { context in
-			do {
+			completion(Result {
 				let managedFeedImages = try Self.mapToManageCache(from: feed, in: context)
 				let cache = try ManagedCache.getNewManagedCacheInstance(in: context)
 				cache.feed = NSOrderedSet(array: managedFeedImages)
 				cache.timestamp = timestamp
 				try context.save()
-				completion(.success(()))
-			} catch {
-				context.rollback()
-				completion(.failure(error))
-			}
+			})
 		}
 	}
 	
 	public func deleteCachedFeed(completion: @escaping DeletionCompletion) {
 		perform { context in
-			do {
+			completion(Result {
 				try ManagedCache.find(in: context).map(context.delete).map(context.save)
-				completion(.success(()))
-			} catch {
-				context.rollback()
-				completion(.failure(error))
-			}
+			})
 		}
 	}
 	
@@ -78,28 +81,6 @@ public final class CoreDataFeedStore: FeedStore {
 	private func perform(_ action: @escaping (NSManagedObjectContext) -> Void) {
 		let context = self.context
 		context.perform { action(context) }
-	}
-}
-
-// MARK: - CoreDataFeedStore extension for RetrieveCachedFeedResult
-private extension CoreDataFeedStore {
-	
-	/// Retrieves the cached feed result from the specified Core Data context.
-	///
-	/// - Parameters:
-	///   - context: The `NSManagedObjectContext` in which the cache is retrieved.
-	/// - Returns: A `FeedStore.RetrieveResult` indicating the outcome of the retrieval.
-	///   - If a cached feed is found, returns `.found(feed:timestamp:)` with the mapped feed and timestamp.
-	///   - If no cached feed is found, returns `.empty`.
-	/// - Throws: An error of type `Error` if there is an issue during the retrieval process.
-	///
-	static func retriveCacheResult(in context: NSManagedObjectContext) throws -> FeedStore.RetrieveResult {
-		if let cache = try ManagedCache.find(in: context) {
-			let feed = Self.mapToManagedFeed(from: cache)
-			return .success(CacheFeed(feed: feed, timestamp: cache.timestamp))
-		} else {
-			return .success(.none)
-		}
 	}
 }
 
