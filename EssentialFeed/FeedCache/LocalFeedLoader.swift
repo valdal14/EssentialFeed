@@ -19,30 +19,31 @@ public final class LocalFeedLoader: FeedLoader {
 
 // MARK: - LocalFeedLoader Save Extension
 extension LocalFeedLoader {
-	public typealias SaveResult = Error?
+	public typealias SaveResult = Result<Void, Error>
 	
 	public func save(_ feed: [FeedImage], completion: @escaping (SaveResult) -> Void) {
-		self.store.deleteCachedFeed { [weak self] error in
+		self.store.deleteCachedFeed { [weak self] deletionResult in
 			guard let self = self else { return }
-			if let cachedDeletionError = error {
-				completion(cachedDeletionError)
-			} else {
+			switch deletionResult {
+			case .success:
 				self.cache(feed, with: completion)
+			case .failure(let error):
+				completion(.failure(error))
 			}
 		}
 	}
 	
 	private func cache(_ feed: [FeedImage], with completion: @escaping (SaveResult) -> Void) {
-		store.insert(feed.toLocal(), timestamp: self.currentDate()) { [weak self] error in
+		store.insert(feed.toLocal(), timestamp: self.currentDate()) { [weak self] insertionError in
 			guard self != nil else { return }
-			completion(error)
+			completion(insertionError)
 		}
 	}
 }
 
 // MARK: - LocalFeedLoader Load Extension
 extension LocalFeedLoader {
-	public typealias LoadResult = LoadFeedResult
+	public typealias LoadResult = FeedLoader.Result
 	
 	public func load(completion: @escaping (LoadResult) -> Void) {
 		store.retrieve { [weak self] result in
@@ -51,9 +52,9 @@ extension LocalFeedLoader {
 			switch result {
 			case .failure(let error):
 				completion(.failure(error))
-			case let .found(feed: feed, timestamp: timestamp) where FeedCachePolicy.validate(timestamp, against: self.currentDate()):
-				completion(.success(feed.toModels()))
-			case .found, .empty:
+			case let .success(.some(cache)) where FeedCachePolicy.validate(cache.timestamp, against: self.currentDate()):
+				completion(.success(cache.feed.toModels()))
+			case .success:
 				completion(.success([]))
 			}
 		}
@@ -69,9 +70,9 @@ extension LocalFeedLoader {
 			switch result {
 			case .failure:
 				self.store.deleteCachedFeed() { _ in }
-			case let .found(feed: _, timestamp: timestamp) where !FeedCachePolicy.validate(timestamp, against: self.currentDate()):
+			case let .success(.some(cache)) where !FeedCachePolicy.validate(cache.timestamp, against: self.currentDate()):
 				self.store.deleteCachedFeed() { _ in }
-			case .empty, .found:
+			case .success:
 				break
 			}
 		}
