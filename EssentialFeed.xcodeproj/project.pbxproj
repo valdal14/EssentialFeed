@@ -76,6 +76,7 @@
 		0103B8712B34113E000006E4 /* XCTestCase+FeedStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+FeedStoreSpecs.swift"; sourceTree = "<group>"; };
 		0103B8732B342AEC000006E4 /* CoreDataFeedStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataFeedStoreTests.swift; sourceTree = "<group>"; };
 		0103B8762B342F5D000006E4 /* FeedStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FeedStore.xcdatamodel; sourceTree = "<group>"; };
+		01086DD92B3D6AE9007EB1B6 /* EssentialFeedAPIEndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeedAPIEndToEndTests.xctestplan; sourceTree = "<group>"; };
 		011A38EE2B30826B00CAD6FF /* ValidateFeedCacheUserCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidateFeedCacheUserCaseTests.swift; sourceTree = "<group>"; };
 		012070422B2EF1F3001E738C /* LocalFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeedLoader.swift; sourceTree = "<group>"; };
 		012070442B2EF2FE001E738C /* FeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStore.swift; sourceTree = "<group>"; };
@@ -218,6 +219,7 @@
 				01C46F4B2B2A43D2008DEA0C /* CI.xctestplan */,
 				015C0ACB2B2A1F6E0022A428 /* EssentialFeed.xctestplan */,
 				01C1ED622B373F6300F0937F /* EssentialFeedCacheIntegrationTests.xctestplan */,
+				01086DD92B3D6AE9007EB1B6 /* EssentialFeedAPIEndToEndTests.xctestplan */,
 				0121EAB12B29EDFC00FA6F2B /* Helpers */,
 				016092E22B2DCA8200101243 /* FeedCache */,
 				0128A6422B29A2C9006159BD /* FeedAPI */,
@@ -794,6 +796,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.valdal14.EssentialFeedAPIEndToEndTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -816,6 +819,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.valdal14.EssentialFeedAPIEndToEndTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 			};
