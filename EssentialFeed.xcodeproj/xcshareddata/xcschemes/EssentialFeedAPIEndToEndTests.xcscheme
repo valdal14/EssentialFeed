@@ -13,7 +13,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:EssentialFeedCacheIntegrationTests 1.xctestplan"
+            reference = "container:EssentialFeedAPIEndToEndTests.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -23,9 +23,9 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "01C1ED572B373EA400F0937F"
-               BuildableName = "EssentialFeedCacheIntegrationTests.xctest"
-               BlueprintName = "EssentialFeedCacheIntegrationTests"
+               BlueprintIdentifier = "01A65F762B2A239500BADEA2"
+               BuildableName = "EssentialFeedAPIEndToEndTests.xctest"
+               BlueprintName = "EssentialFeedAPIEndToEndTests"
                ReferencedContainer = "container:EssentialFeed.xcodeproj">
             </BuildableReference>
          </TestableReference>
