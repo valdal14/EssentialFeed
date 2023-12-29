@@ -8,4 +8,25 @@
 import XCTest
 @testable import EssentialFeediOS
 
-final class FeedViewControllerTests: XCTestCase {}
+// MARK: - PROD Code
+class FeedViewController {
+	
+	convenience init(loader: LoaderSpy) {
+		self.init()
+	}
+}
+
+// MARK: - Tests
+final class FeedViewControllerTests: XCTestCase {
+	
+	func test_init_doesNotLoadFeed() {
+		let loader = LoaderSpy()
+		_ = FeedViewController(loader: loader)
+		XCTAssertTrue(loader.loadCallCount == 0, "Exptected 0 but got \(loader.loadCallCount)")
+	}
+}
+
+// MARK: - LoaderSpy
+class LoaderSpy {
+	private(set) var loadCallCount: Int = 0
+}
