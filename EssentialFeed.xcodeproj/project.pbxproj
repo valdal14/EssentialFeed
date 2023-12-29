@@ -112,6 +112,7 @@
 		019A31052B3F1B1A00A1881E /* EssentialFeediOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeediOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		019A310A2B3F1B1A00A1881E /* FeedViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewControllerTests.swift; sourceTree = "<group>"; };
 		019A31132B3F1B8500A1881E /* EssentialFeediOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeediOS.xctestplan; sourceTree = "<group>"; };
+		019A31142B3F1C5600A1881E /* CI_iOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI_iOS.xctestplan; sourceTree = "<group>"; };
 		01A456D72B29977A00933DC3 /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		01A456D92B2997F100933DC3 /* RemoteFeedItemsMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedItemsMapper.swift; sourceTree = "<group>"; };
 		01A65F772B2A239500BADEA2 /* EssentialFeedAPIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedAPIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -213,6 +214,7 @@
 		0120F1392B2874D80038384E = {
 			isa = PBXGroup;
 			children = (
+				019A31142B3F1C5600A1881E /* CI_iOS.xctestplan */,
 				019A31132B3F1B8500A1881E /* EssentialFeediOS.xctestplan */,
 				019A30F82B3F1A1D00A1881E /* EssentialFeedCacheIntegrationTests.xctestplan */,
 				019A30F72B3F18A600A1881E /* EssentialFeedApiEndToEndTests.xctestplan */,
