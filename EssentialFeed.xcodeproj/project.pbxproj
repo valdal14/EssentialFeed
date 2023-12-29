@@ -151,7 +151,6 @@
 		01E53E512B3D766200D239FB /* EssentialFeediOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeediOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		01E53E532B3D766200D239FB /* EssentialFeediOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EssentialFeediOS.h; sourceTree = "<group>"; };
 		01E53E582B3D766200D239FB /* EssentialFeediOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeediOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		01E53E662B3D767900D239FB /* EssentialFeediOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeediOS.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -386,9 +385,8 @@
 			isa = PBXGroup;
 			children = (
 				01E2039C2B3D84DF001081DC /* CI_iOS.xctestplan */,
-				01E53E662B3D767900D239FB /* EssentialFeediOS.xctestplan */,
-				010151482B3EA5240061CCC1 /* FeedViewControllerTests.swift */,
 				0101514A2B3EA7AD0061CCC1 /* EssentialFeediOS.xctestplan */,
+				010151482B3EA5240061CCC1 /* FeedViewControllerTests.swift */,
 			);
 			path = EssentialFeediOSTests;
 			sourceTree = "<group>";
