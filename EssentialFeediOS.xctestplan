@@ -1,8 +1,8 @@
 {
   "configurations" : [
     {
-      "id" : "7E76CE6E-21F3-4F83-85A0-5E61FDFEBDC0",
-      "name" : "Test Scheme Action",
+      "id" : "3E89A134-880E-40C7-943C-A4526A6BEF05",
+      "name" : "Configuration 1",
       "options" : {
 
       }
@@ -22,9 +22,6 @@
   },
   "testTargets" : [
     {
-      "skippedTests" : [
-        "EssentialFeediOSTests"
-      ],
       "target" : {
         "containerPath" : "container:EssentialFeed.xcodeproj",
         "identifier" : "01E53E572B3D766200D239FB",
