@@ -5,6 +5,7 @@
 //  Created by Valerio D'ALESSIO on 29/12/23.
 //
 
+import EssentialFeed
 import EssentialFeediOS
 import XCTest
 import UIKit
@@ -12,16 +13,16 @@ import UIKit
 
 // MARK: - PROD Code
 final class FeedViewController: UIViewController {
-	private var loader: LoaderSpy?
+	private var loader: FeedLoader?
 	
-	convenience init(loader: LoaderSpy) {
+	convenience init(loader: FeedLoader) {
 		self.init()
 		self.loader = loader
 	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		loader?.load()
+		loader?.load() { _ in }
 	}
 }
 
@@ -45,10 +46,10 @@ final class FeedViewControllerTests: XCTestCase {
 }
 
 // MARK: - LoaderSpy
-class LoaderSpy {
+class LoaderSpy: FeedLoader {
 	private(set) var loadCallCount: Int = 0
 	
-	func load() {
+	func load(completion: @escaping (FeedLoader.Result) -> Void) {
 		loadCallCount += 1
 	}
 }
