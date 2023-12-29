@@ -45,6 +45,9 @@
 		01C1ED642B3745B700F0937F /* FeedCacheTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF47502B30876E00B36D51 /* FeedCacheTestHelpers.swift */; };
 		01C1ED652B37469600F0937F /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF47532B3088FF00B36D51 /* SharedTestHelpers.swift */; };
 		01C1ED672B375ECF00F0937F /* CoreDataFeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C1ED662B375ECF00F0937F /* CoreDataFeedStore.swift */; };
+		01D4D89B2B3F4495009D8E9B /* XCTTestCase+MemoryLeakTrackingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0121EAB22B29EE2D00FA6F2B /* XCTTestCase+MemoryLeakTrackingHelper.swift */; };
+		01D4D89D2B3F45AE009D8E9B /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0120F1432B2874D80038384E /* EssentialFeed.framework */; };
+		01D4D89E2B3F45AE009D8E9B /* EssentialFeed.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0120F1432B2874D80038384E /* EssentialFeed.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		01D532212B35F74A009CB929 /* ManagedFeedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D532202B35F74A009CB929 /* ManagedFeedImage.swift */; };
 		01D532232B35F763009CB929 /* ManagedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D532222B35F763009CB929 /* ManagedCache.swift */; };
 		01D532252B35F83F009CB929 /* Coredata+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D532242B35F83F009CB929 /* Coredata+Helpers.swift */; };
@@ -79,7 +82,28 @@
 			remoteGlobalIDString = 0120F1422B2874D80038384E;
 			remoteInfo = EssentialFeed;
 		};
+		01D4D89F2B3F45AE009D8E9B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0120F13A2B2874D80038384E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0120F1422B2874D80038384E;
+			remoteInfo = EssentialFeed;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		01D4D8A12B3F45AE009D8E9B /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				01D4D89E2B3F45AE009D8E9B /* EssentialFeed.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0103B86F2B34105C000006E4 /* FeedStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStoreSpecs.swift; sourceTree = "<group>"; };
@@ -149,6 +173,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01D4D89D2B3F45AE009D8E9B /* EssentialFeed.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,6 +252,7 @@
 				019A30FF2B3F1B1A00A1881E /* EssentialFeediOS */,
 				019A31092B3F1B1A00A1881E /* EssentialFeediOSTests */,
 				0120F1442B2874D80038384E /* Products */,
+				01D4D89C2B3F45AE009D8E9B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -358,6 +384,13 @@
 			path = EssentialFeedCacheIntegrationTests;
 			sourceTree = "<group>";
 		};
+		01D4D89C2B3F45AE009D8E9B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -424,10 +457,12 @@
 				019A30FA2B3F1B1900A1881E /* Sources */,
 				019A30FB2B3F1B1900A1881E /* Frameworks */,
 				019A30FC2B3F1B1900A1881E /* Resources */,
+				01D4D8A12B3F45AE009D8E9B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				01D4D8A02B3F45AE009D8E9B /* PBXTargetDependency */,
 			);
 			name = EssentialFeediOS;
 			productName = EssentialFeediOS;
@@ -641,6 +676,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01D4D89B2B3F4495009D8E9B /* XCTTestCase+MemoryLeakTrackingHelper.swift in Sources */,
 				019A310B2B3F1B1A00A1881E /* FeedViewControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -687,6 +723,11 @@
 			isa = PBXTargetDependency;
 			target = 0120F1422B2874D80038384E /* EssentialFeed */;
 			targetProxy = 01C1ED5D2B373EA400F0937F /* PBXContainerItemProxy */;
+		};
+		01D4D8A02B3F45AE009D8E9B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0120F1422B2874D80038384E /* EssentialFeed */;
+			targetProxy = 01D4D89F2B3F45AE009D8E9B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -950,6 +991,9 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -988,6 +1032,9 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1011,6 +1058,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.valdal14.EssentialFeediOSTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -1034,6 +1084,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.valdal14.EssentialFeediOSTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
