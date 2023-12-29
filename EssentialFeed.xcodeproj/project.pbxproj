@@ -107,7 +107,7 @@
 
 /* Begin PBXFileReference section */
 		010151482B3EA5240061CCC1 /* FeedViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewControllerTests.swift; sourceTree = "<group>"; };
-		0101514A2B3EA7AD0061CCC1 /* EssentialFeediOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = file; path = EssentialFeediOS.xctestplan; sourceTree = SOURCE_ROOT; };
+		0101514A2B3EA7AD0061CCC1 /* EssentialFeediOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeediOS.xctestplan; sourceTree = SOURCE_ROOT; };
 		0103B86F2B34105C000006E4 /* FeedStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStoreSpecs.swift; sourceTree = "<group>"; };
 		0103B8712B34113E000006E4 /* XCTestCase+FeedStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+FeedStoreSpecs.swift"; sourceTree = "<group>"; };
 		0103B8732B342AEC000006E4 /* CoreDataFeedStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataFeedStoreTests.swift; sourceTree = "<group>"; };
