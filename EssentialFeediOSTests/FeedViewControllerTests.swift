@@ -5,14 +5,23 @@
 //  Created by Valerio D'ALESSIO on 29/12/23.
 //
 
+import EssentialFeediOS
 import XCTest
-@testable import EssentialFeediOS
+import UIKit
+
 
 // MARK: - PROD Code
-class FeedViewController {
+final class FeedViewController: UIViewController {
+	private var loader: LoaderSpy?
 	
 	convenience init(loader: LoaderSpy) {
 		self.init()
+		self.loader = loader
+	}
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		loader?.load()
 	}
 }
 
@@ -24,9 +33,22 @@ final class FeedViewControllerTests: XCTestCase {
 		_ = FeedViewController(loader: loader)
 		XCTAssertTrue(loader.loadCallCount == 0, "Exptected 0 but got \(loader.loadCallCount)")
 	}
+	
+	func test_viewDidLoad_loadsFeed() {
+		let loader = LoaderSpy()
+		let sut = FeedViewController(loader: loader)
+	
+		sut.loadViewIfNeeded()
+		
+		XCTAssertTrue(loader.loadCallCount == 1, "Exptected 1 but got \(loader.loadCallCount)")
+	}
 }
 
 // MARK: - LoaderSpy
 class LoaderSpy {
 	private(set) var loadCallCount: Int = 0
+	
+	func load() {
+		loadCallCount += 1
+	}
 }
