@@ -95,6 +95,8 @@
 		0153D4052B2A06D100FB2506 /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
 		015C0ACB2B2A1F6E0022A428 /* EssentialFeed.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeed.xctestplan; sourceTree = "<group>"; };
 		016092E32B2DCAF200101243 /* CacheFeedUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheFeedUseCaseTests.swift; sourceTree = "<group>"; };
+		019A30F72B3F18A600A1881E /* EssentialFeedApiEndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeedApiEndToEndTests.xctestplan; sourceTree = "<group>"; };
+		019A30F82B3F1A1D00A1881E /* EssentialFeedCacheIntegrationTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeedCacheIntegrationTests.xctestplan; sourceTree = "<group>"; };
 		01A456D72B29977A00933DC3 /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		01A456D92B2997F100933DC3 /* RemoteFeedItemsMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedItemsMapper.swift; sourceTree = "<group>"; };
 		01A65F772B2A239500BADEA2 /* EssentialFeedAPIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedAPIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -104,7 +106,6 @@
 		01AF47562B30A31500B36D51 /* FeedCachePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCachePolicy.swift; sourceTree = "<group>"; };
 		01C1ED582B373EA400F0937F /* EssentialFeedCacheIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedCacheIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		01C1ED5A2B373EA400F0937F /* EssentialFeedCacheIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentialFeedCacheIntegrationTests.swift; sourceTree = "<group>"; };
-		01C1ED622B373F6300F0937F /* EssentialFeedCacheIntegrationTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeedCacheIntegrationTests.xctestplan; sourceTree = "<group>"; };
 		01C1ED662B375ECF00F0937F /* CoreDataFeedStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataFeedStore.swift; sourceTree = "<group>"; };
 		01C46F4B2B2A43D2008DEA0C /* CI_macOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI_macOS.xctestplan; sourceTree = "<group>"; };
 		01D532202B35F74A009CB929 /* ManagedFeedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedFeedImage.swift; sourceTree = "<group>"; };
@@ -182,6 +183,10 @@
 		0120F1392B2874D80038384E = {
 			isa = PBXGroup;
 			children = (
+				019A30F82B3F1A1D00A1881E /* EssentialFeedCacheIntegrationTests.xctestplan */,
+				019A30F72B3F18A600A1881E /* EssentialFeedApiEndToEndTests.xctestplan */,
+				01C46F4B2B2A43D2008DEA0C /* CI_macOS.xctestplan */,
+				015C0ACB2B2A1F6E0022A428 /* EssentialFeed.xctestplan */,
 				0120F1452B2874D80038384E /* EssentialFeed */,
 				0120F14F2B2874D80038384E /* EssentialFeedTests */,
 				01A65F782B2A239500BADEA2 /* EssentialFeedAPIEndToEndTests */,
@@ -215,9 +220,6 @@
 		0120F14F2B2874D80038384E /* EssentialFeedTests */ = {
 			isa = PBXGroup;
 			children = (
-				01C46F4B2B2A43D2008DEA0C /* CI_macOS.xctestplan */,
-				015C0ACB2B2A1F6E0022A428 /* EssentialFeed.xctestplan */,
-				01C1ED622B373F6300F0937F /* EssentialFeedCacheIntegrationTests.xctestplan */,
 				0121EAB12B29EDFC00FA6F2B /* Helpers */,
 				016092E22B2DCA8200101243 /* FeedCache */,
 				0128A6422B29A2C9006159BD /* FeedAPI */,
@@ -794,6 +796,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.valdal14.EssentialFeedAPIEndToEndTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -816,6 +819,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.valdal14.EssentialFeedAPIEndToEndTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 			};
@@ -836,6 +840,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.valdal14.EssentialFeedCacheIntegrationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "macosx iphonesimulator iphoneos";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -857,6 +862,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.valdal14.EssentialFeedCacheIntegrationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "macosx iphonesimulator iphoneos";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 			};
