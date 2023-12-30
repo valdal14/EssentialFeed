@@ -6,44 +6,11 @@
 //
 
 import EssentialFeed
+import EssentialFeediOS
 import XCTest
 import UIKit
 
 
-// MARK: - PROD Code
-final class FeedViewController: UITableViewController {
-	private var loader: FeedLoader?
-	private var isViewAppeared = false
-	
-	convenience init(loader: FeedLoader) {
-		self.init()
-		self.loader = loader
-	}
-	
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		refreshControl = UIRefreshControl()
-		refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
-		load()
-	}
-	
-	override func viewIsAppearing(_ animated: Bool) {
-		super.viewIsAppearing(animated)
-		if !isViewAppeared {
-			refreshControl?.beginRefreshing()
-			isViewAppeared = true
-		}
-	}
-	
-	@objc private func load() {
-		refreshControl?.beginRefreshing()
-		loader?.load() { [weak self] _ in
-			self?.refreshControl?.endRefreshing()
-		}
-	}
-}
-
-// MARK: - Tests
 final class FeedViewControllerTests: XCTestCase {
 	
 	func test_loadFeedActions_requestFeedFromLoader() {
@@ -164,10 +131,12 @@ private extension FeedViewController {
 private extension UIRefreshControl {
 	func simulatePullToRefresh() {
 		allTargets.forEach{ target in
-			actions(forTarget: target, forControlEvent:
-					.valueChanged)?.forEach {
-						(target as NSObject).perform(Selector($0))
-					}
+			actions(
+				forTarget: target,
+				forControlEvent: .valueChanged
+			)?.forEach {
+				(target as NSObject).perform(Selector($0))
+			}
 		}
 	}
 }
