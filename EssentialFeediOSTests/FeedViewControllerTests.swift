@@ -88,10 +88,25 @@ final class FeedViewControllerTests: XCTestCase {
 		
 		let view = sut.feedImageView(at: 0) as? FeedImageCell
 		
-		expect(sut: sut, loader: loader, images: images)
+		assertThat(sut, and: loader, isRendering: images)
 	}
 	
-	
+	func test_loadFeedCompletion_doesNotAlterCurrentRenderingStateOnError() {
+		let images = makeFeedImages()
+		let (sut, loader) = makeSUT()
+		sut.loadViewIfNeeded()
+		
+		loader.completeFeedLoading(with: images, at: 0)
+		
+		let view = sut.feedImageView(at: 0) as? FeedImageCell
+		
+		assertThat(sut, and: loader, isRendering: images)
+		
+		/// user initiate a new reload with error
+		sut.simulateUserInitiatedFeedReload()
+		loader.completeFeedLoadingWithError(at: 1)
+		assertThat(sut, and: loader, isRendering: images)
+	}
 	
 	// MARK: - Helpers
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
@@ -138,6 +153,14 @@ final class FeedViewControllerTests: XCTestCase {
 		XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), images.count, "Expected \(images.count) Image View but got \(sut.numberOfRenderedFeedImageViews())", file: file, line: line)
 	}
 	
+	private func assertThat(_ sut: FeedViewController, and loader: LoaderSpy, isRendering feed: [FeedImage], file: StaticString = #file, line: UInt = #line) {
+		guard sut.numberOfRenderedFeedImageViews() == feed.count else {
+			return XCTFail("Expected \(feed.count) images but got \(sut.numberOfRenderedFeedImageViews()) instead", file: file, line: line)
+		}
+		
+		expect(sut: sut, loader: loader, images: feed)
+	}
+	
 	// MARK: - LoaderSpy
 	private class LoaderSpy: FeedLoader {
 		private var completions: [((FeedLoader.Result) -> Void)] = []
@@ -152,6 +175,11 @@ final class FeedViewControllerTests: XCTestCase {
 		
 		func completeFeedLoading(with feed: [FeedImage] = [], at index: Int) {
 			completions[index](.success(feed))
+		}
+		
+		func completeFeedLoadingWithError(at index: Int) {
+			let error: NSError = NSError(domain: "an error", code: 0)
+			completions[index](.failure(error))
 		}
 	}
 }
