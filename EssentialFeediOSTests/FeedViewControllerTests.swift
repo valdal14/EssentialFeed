@@ -94,8 +94,6 @@ final class FeedViewControllerTests: XCTestCase {
 		
 		loader.completeFeedLoading(with: images, at: 0)
 		
-		let view = sut.feedImageView(at: 0) as? FeedImageCell
-		
 		assertThat(sut, and: loader, isRendering: images)
 	}
 	
@@ -105,8 +103,6 @@ final class FeedViewControllerTests: XCTestCase {
 		sut.loadViewIfNeeded()
 		
 		loader.completeFeedLoading(with: images, at: 0)
-		
-		let view = sut.feedImageView(at: 0) as? FeedImageCell
 		
 		assertThat(sut, and: loader, isRendering: images)
 		
