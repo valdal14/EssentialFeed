@@ -10,8 +10,8 @@ import UIKit
 
 final public class FeedImageCellController {
 	private var task: FeedImageDataLoaderTask?
-	private var model: FeedImage
 	private var imageLoader: FeedImageDataLoader
+	public var model: FeedImage
 	
 	init(model: FeedImage, imageLoader: FeedImageDataLoader) {
 		self.model = model
@@ -52,7 +52,7 @@ final public class FeedImageCellController {
 		}
 	}
 	
-	deinit {
+	func cencelLoad() {
 		task?.cancel()
 	}
 }
