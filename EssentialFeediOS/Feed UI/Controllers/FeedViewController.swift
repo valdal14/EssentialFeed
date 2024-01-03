@@ -69,6 +69,6 @@ public extension FeedViewController {
 	
 	// MARK: - Helpers
 	private func cancelCellController(forRowAt indexPath: IndexPath) {
-		cellController(forRowAt: indexPath).cencelLoad()
+		cellController(forRowAt: indexPath).cancelLoad()
 	}
 }
