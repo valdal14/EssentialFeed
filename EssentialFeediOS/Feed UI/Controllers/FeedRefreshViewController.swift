@@ -7,30 +7,30 @@
 
 import UIKit
 
-final public class FeedRefreshViewController: NSObject {
-	private let viewModel: FeedViewModel
+final public class FeedRefreshViewController: NSObject, FeedLoadingView {
+	private let presenter: FeedPresenter
 	
-	init(viewModel: FeedViewModel) {
-		self.viewModel = viewModel
+	init(presenter: FeedPresenter) {
+		self.presenter = presenter
 	}
 	
-	public lazy var view = binded(UIRefreshControl())
+	public lazy var view = loadView()
 	
-	private func binded(_ view: UIRefreshControl) -> UIRefreshControl {
-		/// in iOS 17 we still need a reference to self as workaround
-		/// for the viewIsAppearing bug
-		viewModel.onLoadingStateChange = { [weak self] isLoading in
-			if isLoading {
-				self?.view.beginRefreshing()
-			} else {
-				self?.view.endRefreshing()
-			}
+	func display(isLoading: Bool) {
+		if isLoading {
+			view.beginRefreshing()
+		} else {
+			view.endRefreshing()
 		}
+	}
+	
+	private func loadView() -> UIRefreshControl {
+		let view = UIRefreshControl()
 		view.addTarget(self, action: #selector(refresh), for: .valueChanged)
 		return view
 	}
 	
 	@objc func refresh() {
-		viewModel.loadFeed()
+		presenter.loadFeed()
 	}
 }
