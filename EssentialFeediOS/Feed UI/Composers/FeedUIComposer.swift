@@ -15,7 +15,7 @@ public final class FeedUIComposer {
 		let presenter = FeedPresenter(feedLoader: feedLoader)
 		let refreshController = FeedRefreshViewController(presenter: presenter)
 		let feedController = FeedViewController(refreshController: refreshController)
-		presenter.loadingView = refreshController
+		presenter.loadingView = WeakRefVirtualProxy(refreshController)
 		presenter.feedView = FeedViewAdapter(controller: feedController, imageLoader: imageLoader)
 		return feedController
 	}
@@ -35,5 +35,26 @@ private final class FeedViewAdapter: FeedView {
 		controller?.tableModel = feed.map({ feedModel in
 			FeedImageCellController(viewModel: FeedImageViewModel(model: feedModel, imageLoader: imageLoader, imageTransformer: UIImage.init))
 		})
+	}
+}
+
+// Move Memory Management details to the Composition layer.
+/**
+ Proxy Pattern
+ 
+ The Proxy Pattern provides a surrogate or placeholder for another object to control access to it. A Proxy implements the same interface as the object it’s surrogate for. It makes consumers believe they’re talking to the real implementation.
+ */
+
+private final class WeakRefVirtualProxy<T: AnyObject> {
+	private weak var object: T?
+	
+	init(_ object: T) {
+		self.object = object
+	}
+}
+
+extension WeakRefVirtualProxy: FeedLoadingView where T: FeedLoadingView {
+	func display(isLoading: Bool) {
+		object?.display(isLoading: isLoading)
 	}
 }
