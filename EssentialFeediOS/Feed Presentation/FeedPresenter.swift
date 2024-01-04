@@ -24,12 +24,13 @@ protocol FeedView {
 }
 
 final class FeedPresenter {
-	private let loadingView: FeedLoadingView
 	private let feedView: FeedView
+	private let loadingView: FeedLoadingView
 	
-	init(loadingView: FeedLoadingView, feedView: FeedView) {
-		self.loadingView = loadingView
+	
+	init(feedView: FeedView, loadingView: FeedLoadingView) {
 		self.feedView = feedView
+		self.loadingView = loadingView
 	}
 	
 	func didStartLoadingFeed() {
