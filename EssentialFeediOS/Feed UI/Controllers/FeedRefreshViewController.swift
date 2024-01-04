@@ -8,13 +8,12 @@
 import UIKit
 
 final public class FeedRefreshViewController: NSObject, FeedLoadingView {
-	private let presenter: FeedPresenter
-	
-	init(presenter: FeedPresenter) {
-		self.presenter = presenter
-	}
-	
+	var loadFeed: () -> Void
 	public lazy var view = loadView()
+	
+	init(loadFeed: @escaping () -> Void) {
+		self.loadFeed = loadFeed
+	}
 	
 	func display(_ viewModel: FeedLoadingViewModel) {
 		if viewModel.isLoading {
@@ -31,6 +30,6 @@ final public class FeedRefreshViewController: NSObject, FeedLoadingView {
 	}
 	
 	@objc func refresh() {
-		presenter.loadFeed()
+		loadFeed()
 	}
 }
