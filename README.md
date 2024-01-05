@@ -2,6 +2,8 @@
 
 [![CI-macOS](https://github.com/valdal14/EssentialFeed/actions/workflows/CI-macOS.yml/badge.svg)](https://github.com/valdal14/EssentialFeed/actions/workflows/CI-macOS.yml)
 
+[![CI-iOS](https://github.com/valdal14/EssentialFeed/actions/workflows/CI-iOS.yml/badge.svg)](https://github.com/valdal14/EssentialFeed/actions/workflows/CI-iOS.yml)
+
 EssentialFeed is a modular Swift iOS App that utilizes Test-Driven Development (TDD) and Modular Design to retrieve and display feeds.
 
 ## Table of Contents
