@@ -13,6 +13,12 @@ import UIKit
 
 final class FeedViewControllerTests: XCTestCase {
 	
+	func test_feedView_hasTitle() {
+		let (sut, _) = makeSUT()
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.title, "My Feed")
+	}
+	
 	func test_loadFeedActions_requestFeedFromLoader() {
 		let (sut, loader) = makeSUT()
 		XCTAssertEqual(loader.loadFeedCallCount, 0, "Expected no loading requests before view is loaded but got \(loader.loadFeedCallCount)")
