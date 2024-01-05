@@ -670,6 +670,7 @@
 				en,
 				Base,
 				it,
+				es,
 			);
 			mainGroup = 0120F1392B2874D80038384E;
 			productRefGroup = 0120F1442B2874D80038384E /* Products */;

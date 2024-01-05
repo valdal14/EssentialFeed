@@ -10,6 +10,12 @@
             "value" : "My Feed"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mi Feed"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
