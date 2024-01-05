@@ -151,11 +151,10 @@ private final class MainQueueDispachDecorator<T> {
 
 extension MainQueueDispachDecorator: FeedLoader where T == FeedLoader {
 	func load(completion: @escaping (FeedLoader.Result) -> Void) {
-		decoratee.load { result in
-			guard Thread.isMainThread else {
-				return DispatchQueue.main.async { completion(result) }
-			}
-			completion(result)
+		decoratee.load { [weak self] result in
+			self?.dispach(completion: {
+				completion(result)
+			})
 		}
 	}
 }
