@@ -358,18 +358,6 @@ final class FeedUIIntegrationTests: XCTestCase {
 	}
 }
 
-//MARK: - UIButton extension
-extension UIButton {
-	func simulateTap() {
-		allTargets.forEach { target in
-			actions(forTarget: target, forControlEvent: .touchUpInside)?.forEach {
-				(target as NSObject).perform(Selector($0))
-			}
-		}
-	}
-}
-
-
 // MARK: - UIImage extension
 extension UIImage {
 	static func make(withColor color: UIColor) -> UIImage {
