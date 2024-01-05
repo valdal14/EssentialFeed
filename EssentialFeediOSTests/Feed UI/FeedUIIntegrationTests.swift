@@ -356,32 +356,6 @@ final class FeedUIIntegrationTests: XCTestCase {
 	private func anyImageData() -> Data {
 		return UIImage.make(withColor: .red).pngData()!
 	}
-	
-	private func expect(sut: FeedViewController, loader: LoaderSpy, images: [FeedImage], at index: Int = 0, file: StaticString = #file, line: UInt = #line) {
-		
-		for (index, feedImage) in images.enumerated() {
-			let view = sut.feedImageView(at: index)
-			guard let cellView = view as? FeedImageCell else {
-				return XCTFail("Expected \(FeedImageCell.self) instance but got \(String(describing: view)) instead", file: file, line: line)
-			}
-			let isImageShown = ((feedImage.location != nil) ? true : false)
-			XCTAssertEqual(cellView.isShowingLocation, isImageShown, file: file, line: line)
-			XCTAssertEqual(cellView.locationText, feedImage.location, file: file, line: line)
-			XCTAssertEqual(cellView.descriptionText, feedImage.description, file: file, line: line)
-		}
-		
-		loader.completeFeedLoading(with: images, at: 0)
-		
-		XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), images.count, "Expected \(images.count) Image View but got \(sut.numberOfRenderedFeedImageViews())", file: file, line: line)
-	}
-	
-	private func assertThat(_ sut: FeedViewController, and loader: LoaderSpy, isRendering feed: [FeedImage], file: StaticString = #file, line: UInt = #line) {
-		guard sut.numberOfRenderedFeedImageViews() == feed.count else {
-			return XCTFail("Expected \(feed.count) images but got \(sut.numberOfRenderedFeedImageViews()) instead", file: file, line: line)
-		}
-		
-		expect(sut: sut, loader: loader, images: feed)
-	}
 }
 
 // MARK: - Fix iOS 17 bug with refreshControl
@@ -400,7 +374,7 @@ private class FakeRefreshControl: UIRefreshControl {
 }
 
 //MARK: - FeedViewController DLSs Helper extension
-private extension FeedViewController {
+extension FeedViewController {
 	
 	var isShowingLoadingIndicator: Bool {
 		refreshControl?.isRefreshing == true
@@ -510,7 +484,7 @@ private extension UIButton {
 
 
 // MARK: - DSL helpers for the FeedImageCell
-private extension FeedImageCell {
+extension FeedImageCell {
 	var isShowingLocation: Bool {
 		!locationContainer.isHidden
 	}
