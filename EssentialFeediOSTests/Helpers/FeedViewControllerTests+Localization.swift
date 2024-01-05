@@ -8,7 +8,7 @@
 import EssentialFeediOS
 import XCTest
 
-extension FeedViewControllerTests {
+extension FeedUIIntegrationTests {
 	func localized(_ key: String, file: StaticString = #file, line: UInt = #line) -> String {
 		let table = "Feed"
 		let bundle = Bundle(for: FeedViewController.self)
