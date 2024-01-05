@@ -43,7 +43,7 @@ public extension FeedViewController {
 	}
 	
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		return cellController(forRowAt: indexPath).view()
+		return cellController(forRowAt: indexPath).view(in: tableView)
 	}
 	
 	override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
