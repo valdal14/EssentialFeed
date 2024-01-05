@@ -20,7 +20,14 @@ final class FeedPresenter {
 	private let loadingView: FeedLoadingView
 	
 	static var title: String {
-		return "My Feed"
+		let localizedTitle =  LocalizedStringResource(
+			"FEED_VIEW_TITLE",
+			table: "Feed", 
+			locale: .current,
+			bundle: LocalizedStringResource.BundleDescription.forClass(FeedPresenter.self),
+			comment: "Title for the Feed View"
+		)
+		return String(localized: localizedTitle)
 	}
 	
 	init(feedView: FeedView, loadingView: FeedLoadingView) {
