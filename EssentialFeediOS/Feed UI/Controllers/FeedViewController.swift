@@ -89,3 +89,9 @@ extension FeedViewController: FeedLoadingView {
 		delegate?.didRequestFeedRefresh()
 	}
 }
+
+extension FeedViewController: FeedErrorView {
+	func display(_ viewModel: FeedErrorViewModel) {
+		errorView.message = viewModel.message
+	}
+}
