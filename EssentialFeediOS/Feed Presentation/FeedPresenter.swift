@@ -29,14 +29,7 @@ final class FeedPresenter {
 	private let errorView: FeedErrorView
 	
 	static var title: String {
-		let localizedTitle =  LocalizedStringResource(
-			"FEED_VIEW_TITLE",
-			table: "Feed", 
-			locale: .current,
-			bundle: LocalizedStringResource.BundleDescription.forClass(FeedPresenter.self),
-			comment: "Title for the Feed View"
-		)
-		return String(localized: localizedTitle)
+		return Localized.Feed.title
 	}
 	
 	init(feedView: FeedView, loadingView: FeedLoadingView, errorView: FeedErrorView) {
