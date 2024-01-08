@@ -93,4 +93,8 @@ extension FeedViewController {
 		let index = IndexPath(row: row, section: feedItemSection)
 		ds?.tableView?(tableView, cancelPrefetchingForRowsAt: [index])
 	}
+	
+	func simulateOnTapError() {
+		errorView?.button.simulateTap()
+	}
 }
