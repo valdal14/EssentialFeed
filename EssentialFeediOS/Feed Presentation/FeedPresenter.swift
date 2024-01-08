@@ -7,10 +7,6 @@
 
 import EssentialFeed
 
-struct FeedErrorViewModel {
-	let message: String?
-}
-
 protocol FeedLoadingView {
 	func display(_ viewModel: FeedLoadingViewModel)
 }
