@@ -1,0 +1,55 @@
+//
+//  FeedPresenter.swift
+//  EssentialFeed
+//
+//  Created by Valerio D'ALESSIO on 9/1/24.
+//
+
+import Foundation
+
+public protocol FeedErrorView {
+	func display(_ viewModel: FeedErrorViewModel)
+}
+
+public protocol FeedLoadingView {
+	func display(_ viewModel: FeedLoadingViewModel)
+}
+
+public protocol FeedView {
+	func display(_ viewModel: FeedViewModel)
+}
+
+public final class FeedPresenter {
+	private let feedView: FeedView
+	private let loadingView: FeedLoadingView
+	private let errorView: FeedErrorView
+	
+	public init(feedView: FeedView, loadingView: FeedLoadingView, errorView: FeedErrorView) {
+		self.feedView = feedView
+		self.loadingView = loadingView
+		self.errorView = errorView
+	}
+	
+	public static var title: String {
+		return Localized.Feed.title
+	}
+	
+	private var feedLoadError: String {
+		return Localized.Feed.loadError
+	}
+	
+	public func didStartLoadingFeed() {
+		errorView.display(.noError)
+		loadingView.display(FeedLoadingViewModel(isLoading: true))
+	}
+	
+	public func didFinishLoadingFeed(with feed: [FeedImage]) {
+		feedView.display(FeedViewModel(feed: feed))
+		loadingView.display(FeedLoadingViewModel(isLoading: false))
+	}
+	
+	public func didFinishLoadingFeed(with error: Error) {
+		errorView.display(.init(message: feedLoadError))
+		loadingView.display(FeedLoadingViewModel(isLoading: false))
+	}
+}
