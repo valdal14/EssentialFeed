@@ -94,10 +94,14 @@ final class FeedImagePresenterTests: XCTestCase {
 	// MARK: - Helpers
 	private func makeSUT(imageTransformer: @escaping (Data) -> Any? = { _ in nil }, file: StaticString = #file, line: UInt = #line) -> (sut: FeedImagePresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = FeedImagePresenter(view: view, imageTransformer: imageTransformer)
+		let sut = FeedImagePresenter(view: view, imageTransformer: fail)
 		trackForMemoryLeak(view, file: file, line: line)
 		trackForMemoryLeak(sut, file: file, line: line)
 		return (sut, view)
+	}
+	
+	private var fail: (Data) -> Any? {
+		return { _ in nil }
 	}
 	
 	private func makeImage(description: String? = nil, location: String? = nil, url: URL = URL(string: "http://any-url.com")!) -> FeedImage {
