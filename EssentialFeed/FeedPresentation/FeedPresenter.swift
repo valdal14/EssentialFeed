@@ -7,29 +7,6 @@
 
 import Foundation
 
-// MARK: - Structs
-public struct FeedErrorViewModel {
-	public let message: String?
-	
-	static var noError: FeedErrorViewModel {
-		return FeedErrorViewModel(message: nil)
-	}
-	
-	static func error(message: String) -> FeedErrorViewModel {
-		return FeedErrorViewModel(message: message)
-	}
-}
-
-public struct FeedLoadingViewModel {
-	public let isLoading: Bool
-}
-
-public struct FeedViewModel {
-	public let feed: [FeedImage]
-}
-
-// MARK: Protocols
-
 public protocol FeedErrorView {
 	func display(_ viewModel: FeedErrorViewModel)
 }
