@@ -31,21 +31,11 @@ public final class FeedPresenter {
 	}
 	
 	public static var title: String {
-		return NSLocalizedString(
-			"FEED_VIEW_TITLE",
-			tableName: "Feed",
-			bundle: Bundle(for: FeedPresenter.self),
-			comment: "Title for the Feed View"
-		)
+		return Localized.Feed.title
 	}
 	
 	private var feedLoadError: String {
-		return NSLocalizedString(
-			"FEED_VIEW_CONNECTION_ERROR",
-			tableName: "Feed",
-			bundle: Bundle(for: FeedPresenter.self),
-			comment: "Error message displayed when we could not load the feed image from the server"
-		)
+		return Localized.Feed.loadError
 	}
 	
 	public func didStartLoadingFeed() {

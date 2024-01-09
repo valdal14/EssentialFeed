@@ -5,6 +5,7 @@
 //  Created by Valerio D'ALESSIO on 30/12/23.
 //
 
+import EssentialFeed
 import UIKit
 
 protocol FeedViewControllerDelegate {
@@ -74,7 +75,7 @@ public extension FeedViewController {
 
 // MARK: - FeedViewController UIRefreshControl - FeedViewControllerDelegate
 extension FeedViewController: FeedLoadingView {
-	func display(_ viewModel: FeedLoadingViewModel) {
+	public func display(_ viewModel: FeedLoadingViewModel) {
 		refreshControl?.update(isRefreshing: viewModel.isLoading)
 	}
 	
@@ -84,7 +85,7 @@ extension FeedViewController: FeedLoadingView {
 }
 
 extension FeedViewController: FeedErrorView {
-	func display(_ viewModel: FeedErrorViewModel) {
+	public func display(_ viewModel: FeedErrorViewModel) {
 		if let error = viewModel.message {
 			errorView?.show(message: error)
 		} else {
