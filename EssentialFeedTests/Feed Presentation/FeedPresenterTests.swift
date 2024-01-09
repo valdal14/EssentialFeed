@@ -78,9 +78,9 @@ final class FeedPresenterTests: XCTestCase {
 		])
 	}
 	
-	func test_didFinishLoadingFeed_DisplayFeedsAndStopLoading() {
+	func test_didFinishLoadingFeed_displayFeedsAndStopLoading() {
 		let (sut, view) = makeSUT()
-		let feed: [FeedImage] = [makeImage()]
+		let feed: [FeedImage] = []
 		sut.didFinishLoadingFeed(with: feed)
 		
 		XCTAssertEqual(view.messages, [
@@ -96,15 +96,6 @@ final class FeedPresenterTests: XCTestCase {
 		trackForMemoryLeak(view, file: file, line: line)
 		trackForMemoryLeak(sut, file: file, line: line)
 		return (sut, view)
-	}
-	
-	private func makeImage(description: String? = nil, location: String? = nil, url: URL = URL(string: "http://any-url.com")!) -> FeedImage {
-		return FeedImage(
-			id: .init(),
-			description: description,
-			location: location,
-			url: url
-		)
 	}
 	
 	private final class ViewSpy: FeedView, FeedLoadingView, FeedErrorView  {
